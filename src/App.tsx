@@ -17,25 +17,25 @@ import {
   theme as antTheme,
 } from 'antd';
 import {
-  GithubOutlined,
-  LinkedinOutlined,
-  MailOutlined,
-  FacebookOutlined,
-  InstagramOutlined,
-  GlobalOutlined,
-  CodeOutlined,
-  UserOutlined,
-  ProjectOutlined,
-  SendOutlined,
-  PhoneOutlined,
-  EnvironmentOutlined,
-  MoonOutlined,
-  SunOutlined,
-  MenuOutlined,
-  CloseOutlined,
-  CheckCircleFilled,
-  CloseCircleFilled,
-} from '@ant-design/icons';
+  CheckCircle2 as CheckCircle2Icon,
+  Code2 as Code2Icon,
+  Facebook as FacebookIcon,
+  FolderKanban as FolderKanbanIcon,
+  Github as GithubIcon,
+  Globe as GlobeIcon,
+  Instagram as InstagramIcon,
+  Linkedin as LinkedinIcon,
+  Mail as MailIcon,
+  MapPin as MapPinIcon,
+  Menu as MenuIcon,
+  Moon as MoonIcon,
+  Phone as PhoneIcon,
+  Send as SendIcon,
+  Sun as SunIcon,
+  User as UserIcon,
+  X as XIcon,
+  XCircle as XCircleIcon,
+} from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import profileImage from '../assets/id.png';
 import Aurora from './Aurora';
@@ -316,7 +316,7 @@ const App: React.FC = () => {
             </nav>
 
             <div className="flex items-center gap-2 md:ml-4">
-              {isDarkMode ? <MoonOutlined className="text-slate-300" /> : <SunOutlined className="text-amber-500" />}
+              {isDarkMode ? <MoonIcon className="h-4 w-4 text-slate-300" /> : <SunIcon className="h-4 w-4 text-amber-500" />}
               <Switch
                 checked={isDarkMode}
                 onChange={setIsDarkMode}
@@ -326,7 +326,7 @@ const App: React.FC = () => {
               <Button
                 type="text"
                 className="icon-press md:!hidden"
-                icon={isMobileMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
+                icon={isMobileMenuOpen ? <XIcon className="h-4 w-4" /> : <MenuIcon className="h-4 w-4" />}
                 onClick={() => setIsMobileMenuOpen(value => !value)}
                 aria-label="Toggle mobile menu"
               />
@@ -421,11 +421,11 @@ const App: React.FC = () => {
                     </Space>
                   </motion.div>
                   <motion.div variants={heroItem} className="mt-12 flex gap-6">
-                    <Button type="text" className="icon-press" icon={<GithubOutlined className="text-2xl" />} href="https://github.com/mikeeyyyy04" target="_blank" />
-                    <Button type="text" className="icon-press" icon={<LinkedinOutlined className="text-2xl" />} href="https://www.linkedin.com/in/mike-leuster-estrada" target="_blank" />
-                    <Button type="text" className="icon-press" icon={<FacebookOutlined className="text-2xl" />} href="https://www.facebook.com/mike.leuster.estrada" target="_blank" />
-                    <Button type="text" className="icon-press" icon={<InstagramOutlined className="text-2xl" />} href="https://www.instagram.com/_mikeeyyyyyy/" target="_blank" />
-                    <Button type="text" className="icon-press" icon={<MailOutlined className="text-2xl" />} onClick={() => scrollToSection('contact')} />
+                    <Button type="text" className="icon-press" icon={<GithubIcon className="h-6 w-6" />} href="https://github.com/mikeeyyyy04" target="_blank" />
+                    <Button type="text" className="icon-press" icon={<LinkedinIcon className="h-6 w-6" />} href="https://www.linkedin.com/in/mike-leuster-estrada" target="_blank" />
+                    <Button type="text" className="icon-press" icon={<FacebookIcon className="h-6 w-6" />} href="https://www.facebook.com/mike.leuster.estrada" target="_blank" />
+                    <Button type="text" className="icon-press" icon={<InstagramIcon className="h-6 w-6" />} href="https://www.instagram.com/_mikeeyyyyyy/" target="_blank" />
+                    <Button type="text" className="icon-press" icon={<MailIcon className="h-6 w-6" />} onClick={() => scrollToSection('contact')} />
                   </motion.div>
                 </motion.div>
               </Col>
@@ -532,9 +532,9 @@ const App: React.FC = () => {
             <div className="max-w-7xl mx-auto">
               <Row gutter={[24, 24]}>
                 {[
-                  { title: 'Technical Skills', icon: <CodeOutlined />, skills: ['C and Assembly', 'Video Editing', 'Microsoft Office', 'Adobe Softwares'] },
-                  { title: 'Soft Skills', icon: <UserOutlined />, skills: ['Public Speaking', 'Leadership', 'People Management', 'Communication'] },
-                  { title: 'Interests', icon: <ProjectOutlined />, skills: ['Badminton', 'Volleyball', 'Music', 'Reading Books'] },
+                  { title: 'Technical Skills', icon: <Code2Icon className="h-9 w-9" />, skills: ['C and Assembly', 'Video Editing', 'Microsoft Office', 'Adobe Softwares'] },
+                  { title: 'Soft Skills', icon: <UserIcon className="h-9 w-9" />, skills: ['Public Speaking', 'Leadership', 'People Management', 'Communication'] },
+                  { title: 'Interests', icon: <FolderKanbanIcon className="h-9 w-9" />, skills: ['Badminton', 'Volleyball', 'Music', 'Reading Books'] },
                 ].map((category, idx) => (
                   <Col xs={24} md={8} key={idx}>
                     <motion.div
@@ -676,7 +676,7 @@ const App: React.FC = () => {
                   <div className="space-y-8">
                     <motion.div variants={revealItem} className="flex gap-6">
                       <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                        <ProjectOutlined className="text-xl text-blue-600" />
+                        <FolderKanbanIcon className="h-5 w-5 text-blue-600" />
                       </div>
                       <div>
                         <Title level={4} className="!mb-2">Achievements</Title>
@@ -685,7 +685,7 @@ const App: React.FC = () => {
                     </motion.div>
                     <motion.div variants={revealItem} className="flex gap-6">
                       <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                        <UserOutlined className="text-xl text-blue-600" />
+                        <UserIcon className="h-5 w-5 text-blue-600" />
                       </div>
                       <div>
                         <Title level={4} className="!mb-2">Reference</Title>
@@ -694,7 +694,7 @@ const App: React.FC = () => {
                     </motion.div>
                     <motion.div variants={revealItem} className="flex gap-6">
                       <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                        <GlobalOutlined className="text-xl text-blue-600" />
+                        <GlobeIcon className="h-5 w-5 text-blue-600" />
                       </div>
                       <div>
                         <Title level={4} className="!mb-2">Education Timeline</Title>
@@ -729,19 +729,19 @@ const App: React.FC = () => {
                   <div className="space-y-6">
                     <motion.div variants={revealItem} className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                        <MailOutlined className="text-blue-600" />
+                        <MailIcon className="h-4 w-4 text-blue-600" />
                       </div>
                       <Text className="text-lg">leusterestrada@gmail.com</Text>
                     </motion.div>
                     <motion.div variants={revealItem} className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                        <PhoneOutlined className="text-blue-600" />
+                        <PhoneIcon className="h-4 w-4 text-blue-600" />
                       </div>
                       <Text className="text-lg">09649796538</Text>
                     </motion.div>
                     <motion.div variants={revealItem} className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                        <EnvironmentOutlined className="text-blue-600" />
+                        <MapPinIcon className="h-4 w-4 text-blue-600" />
                       </div>
                       <Text className="text-lg">Purok 3, Canagong, Sikatuna, Bohol</Text>
                     </motion.div>
@@ -760,7 +760,7 @@ const App: React.FC = () => {
                             transition={{ duration: 0.2 }}
                             className={`mb-5 rounded-lg px-4 py-3 flex items-center gap-3 ${formFeedback.type === 'success' ? 'form-feedback-success' : 'form-feedback-error'}`}
                           >
-                            {formFeedback.type === 'success' ? <CheckCircleFilled /> : <CloseCircleFilled />}
+                            {formFeedback.type === 'success' ? <CheckCircle2Icon className="h-4 w-4" /> : <XCircleIcon className="h-4 w-4" />}
                             <span>{formFeedback.message}</span>
                           </motion.div>
                         )}
@@ -800,7 +800,7 @@ const App: React.FC = () => {
                           <Input.TextArea rows={4} placeholder="Your Message" className="rounded-lg" />
                         </Form.Item>
                         <Form.Item className="mb-0">
-                          <Button type="primary" icon={<SendOutlined />} htmlType="submit" loading={isSubmitting} className="interactive-btn w-full h-12 rounded-lg font-semibold">
+                          <Button type="primary" icon={<SendIcon className="h-4 w-4" />} htmlType="submit" loading={isSubmitting} className="interactive-btn w-full h-12 rounded-lg font-semibold">
                             Send Message
                           </Button>
                         </Form.Item>
@@ -820,11 +820,11 @@ const App: React.FC = () => {
               <Text className="text-gray-400">Computer Engineering student building practical and impactful software.</Text>
             </div>
             <div className="flex gap-4">
-              <Button type="text" className="icon-press" icon={<GithubOutlined className="text-xl text-gray-400 hover:text-white" />} href="https://github.com/mikeeyyyy04" target="_blank" />
-              <Button type="text" className="icon-press" icon={<LinkedinOutlined className="text-xl text-gray-400 hover:text-white" />} href="https://www.linkedin.com/in/mike-leuster-estrada" target="_blank" />
-              <Button type="text" className="icon-press" icon={<FacebookOutlined className="text-xl text-gray-400 hover:text-white" />} href="https://www.facebook.com/mike.leuster.estrada" target="_blank" />
-              <Button type="text" className="icon-press" icon={<InstagramOutlined className="text-xl text-gray-400 hover:text-white" />} href="https://www.instagram.com/_mikeeyyyyyy/" target="_blank" />
-              <Button type="text" className="icon-press" icon={<MailOutlined className="text-xl text-gray-400 hover:text-white" />} onClick={() => scrollToSection('contact')} />
+              <Button type="text" className="icon-press" icon={<GithubIcon className="h-5 w-5 text-gray-400 hover:text-white" />} href="https://github.com/mikeeyyyy04" target="_blank" />
+              <Button type="text" className="icon-press" icon={<LinkedinIcon className="h-5 w-5 text-gray-400 hover:text-white" />} href="https://www.linkedin.com/in/mike-leuster-estrada" target="_blank" />
+              <Button type="text" className="icon-press" icon={<FacebookIcon className="h-5 w-5 text-gray-400 hover:text-white" />} href="https://www.facebook.com/mike.leuster.estrada" target="_blank" />
+              <Button type="text" className="icon-press" icon={<InstagramIcon className="h-5 w-5 text-gray-400 hover:text-white" />} href="https://www.instagram.com/_mikeeyyyyyy/" target="_blank" />
+              <Button type="text" className="icon-press" icon={<MailIcon className="h-5 w-5 text-gray-400 hover:text-white" />} onClick={() => scrollToSection('contact')} />
             </div>
           </div>
           <Divider className="border-gray-800 my-8" />
