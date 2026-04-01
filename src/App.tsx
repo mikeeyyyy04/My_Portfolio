@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import profileImage from '../assets/id.png';
+import formalImage from '../assets/formal.png';
 import Aurora from './Aurora';
 
 const { Header, Content, Footer } = Layout;
@@ -470,7 +471,7 @@ const App: React.FC = () => {
                 <Col xs={24} md={10}>
                   <motion.img
                     variants={revealItem}
-                    src="https://picsum.photos/seed/workspace/800/1000"
+                    src={formalImage}
                     alt="About Me"
                     className="w-full rounded-3xl shadow-xl"
                     referrerPolicy="no-referrer"
@@ -680,7 +681,11 @@ const App: React.FC = () => {
                       </div>
                       <div>
                         <Title level={4} className="!mb-2">Achievements</Title>
-                        <Paragraph className="text-gray-500">Graduated Valedictorian (Sikatuna Central Elementary School), Graduated Salutatorian (Sikatuna National High School), and Radio Station Guesting (DYRD, 2022).</Paragraph>
+                        <ul className="list-disc pl-5 text-gray-500 space-y-1">
+                          <li>Graduated Valedictorian (Sikatuna Central Elementary School)</li>
+                          <li>Graduated Salutatorian (Sikatuna National High School)</li>
+                          <li>Radio Station Guesting (DYRD, 2022)</li>
+                        </ul>
                       </div>
                     </motion.div>
                     <motion.div variants={revealItem} className="flex gap-6">
@@ -698,7 +703,12 @@ const App: React.FC = () => {
                       </div>
                       <div>
                         <Title level={4} className="!mb-2">Education Timeline</Title>
-                        <Paragraph className="text-gray-500">Sikatuna Central Elementary School (2009 - 2015), Sikatuna National High School (2015 - 2020), Sikatuna National High School GAS (2020 - 2022), BS Computer Engineering at BISU (2022 - present).</Paragraph>
+                        <ul className="list-disc pl-5 text-gray-500 space-y-1">
+                          <li>Sikatuna Central Elementary School (2009 - 2015)</li>
+                          <li>Sikatuna National High School (2015 - 2020)</li>
+                          <li>Sikatuna National High School GAS (2020 - 2022)</li>
+                          <li>BS Computer Engineering at BISU (2022 - present)</li>
+                        </ul>
                       </div>
                     </motion.div>
                   </div>
