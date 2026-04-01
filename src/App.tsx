@@ -135,6 +135,26 @@ const mobileMenuItem = {
   show: { opacity: 1, y: 0, transition: { duration: 0.2 } },
 } as const;
 
+const floatingAnimation = {
+  y: [0, -12, 0],
+  transition: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+} as const;
+
+const pulseAnimation = {
+  scale: [1, 1.05, 1],
+  transition: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
+} as const;
+
+const shimmerAnimation = {
+  backgroundPosition: ['0% 0%', '100% 0%', '0% 0%'],
+  transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+} as const;
+
+const bounceAnimation = {
+  y: [0, -4, 0],
+  transition: { duration: 0.6, repeat: Infinity, ease: 'easeInOut' },
+} as const;
+
 const App: React.FC = () => {
   const [contactForm] = Form.useForm<ContactFormValues>();
   const [activeSection, setActiveSection] = useState('home');
@@ -413,27 +433,41 @@ const App: React.FC = () => {
                   </motion.div>
                   <motion.div variants={heroItem}>
                     <Space size="middle">
-                      <Button type="primary" size="large" onClick={() => scrollToSection('projects')} className="interactive-btn h-12 px-8 text-lg font-medium">
-                        View My Work
-                      </Button>
-                      <Button size="large" onClick={() => scrollToSection('contact')} className="interactive-btn h-12 px-8 text-lg font-medium">
-                        Contact Me
-                      </Button>
+                      <motion.div animate={bounceAnimation} className="inline-block">
+                        <Button type="primary" size="large" onClick={() => scrollToSection('projects')} className="interactive-btn h-12 px-8 text-lg font-medium hover:shadow-lg transition-shadow">
+                          View My Work
+                        </Button>
+                      </motion.div>
+                      <motion.div animate={bounceAnimation} className="inline-block ml-4" style={{animationDelay: '0.2s'}}>
+                        <Button size="large" onClick={() => scrollToSection('contact')} className="interactive-btn h-12 px-8 text-lg font-medium hover:shadow-lg transition-shadow">
+                          Contact Me
+                        </Button>
+                      </motion.div>
                     </Space>
                   </motion.div>
                   <motion.div variants={heroItem} className="mt-12 flex gap-6">
-                    <Button type="text" className="icon-press" icon={<GithubIcon className="h-6 w-6" />} href="https://github.com/mikeeyyyy04" target="_blank" />
-                    <Button type="text" className="icon-press" icon={<LinkedinIcon className="h-6 w-6" />} href="https://www.linkedin.com/in/mike-leuster-estrada" target="_blank" />
-                    <Button type="text" className="icon-press" icon={<FacebookIcon className="h-6 w-6" />} href="https://www.facebook.com/mike.leuster.estrada" target="_blank" />
-                    <Button type="text" className="icon-press" icon={<InstagramIcon className="h-6 w-6" />} href="https://www.instagram.com/_mikeeyyyyyy/" target="_blank" />
-                    <Button type="text" className="icon-press" icon={<MailIcon className="h-6 w-6" />} onClick={() => scrollToSection('contact')} />
+                    <motion.div whileHover={{ scale: 1.2, rotate: 12 }} whileTap={{ scale: 0.95 }}>
+                      <Button type="text" className="icon-press" icon={<GithubIcon className="h-6 w-6" />} href="https://github.com/mikeeyyyy04" target="_blank" />
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.2, rotate: 12 }} whileTap={{ scale: 0.95 }}>
+                      <Button type="text" className="icon-press" icon={<LinkedinIcon className="h-6 w-6" />} href="https://www.linkedin.com/in/mike-leuster-estrada" target="_blank" />
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.2, rotate: 12 }} whileTap={{ scale: 0.95 }}>
+                      <Button type="text" className="icon-press" icon={<FacebookIcon className="h-6 w-6" />} href="https://www.facebook.com/mike.leuster.estrada" target="_blank" />
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.2, rotate: 12 }} whileTap={{ scale: 0.95 }}>
+                      <Button type="text" className="icon-press" icon={<InstagramIcon className="h-6 w-6" />} href="https://www.instagram.com/_mikeeyyyyyy/" target="_blank" />
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.2, rotate: 12 }} whileTap={{ scale: 0.95 }}>
+                      <Button type="text" className="icon-press" icon={<MailIcon className="h-6 w-6" />} onClick={() => scrollToSection('contact')} />
+                    </motion.div>
                   </motion.div>
                 </motion.div>
               </Col>
               <Col xs={24} md={12} className="flex justify-center">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.94 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  animate={{ opacity: 1, scale: 1, ...floatingAnimation }}
                   transition={{ duration: 0.44, delay: 0.2, ease: 'easeOut' }}
                   className="relative"
                 >
@@ -540,12 +574,13 @@ const App: React.FC = () => {
                   <Col xs={24} md={8} key={idx}>
                     <motion.div
                       variants={revealItem}
-                      whileHover={{ rotateX: 2, rotateY: -2, y: -4 }}
+                      animate={floatingAnimation}
+                      whileHover={{ rotateX: 2, rotateY: -2, y: -8, scale: 1.02 }}
                       transition={{ duration: 0.2, ease: 'easeOut' }}
                       className="card-tilt"
                     >
-                      <Card className="h-full border-none rounded-2xl">
-                        <div className="text-4xl text-blue-600 mb-6">{category.icon}</div>
+                      <Card className="h-full border-none rounded-2xl 2xl:shadow-xl 2xl:hover:shadow-2xl transition-shadow">
+                        <motion.div animate={pulseAnimation} className="text-4xl text-blue-600 mb-6">{category.icon}</motion.div>
                         <Title level={3} className="!mb-6">{category.title}</Title>
                         <div className="flex flex-wrap gap-2">
                           {category.skills.map(skill => (
@@ -590,14 +625,15 @@ const App: React.FC = () => {
                   <Col xs={24} md={8} key={idx}>
                     <motion.div
                       variants={revealItem}
-                      whileHover={{ rotateX: 1.5, rotateY: -1.5, y: -5 }}
+                      animate={floatingAnimation}
+                      whileHover={{ rotateX: 2, rotateY: -2, y: -8, scale: 1.03 }}
                       transition={{ duration: 0.2, ease: 'easeOut' }}
                       className="card-tilt"
                     >
                       <Card
                         hoverable
-                        cover={<img alt={project.title} src={project.img} className="h-48 object-cover" referrerPolicy="no-referrer" />}
-                        className="overflow-hidden rounded-2xl border-gray-100"
+                        cover={<motion.img alt={project.title} src={project.img} className="h-48 object-cover transition-transform duration-500" whileHover={{scale: 1.08}} referrerPolicy="no-referrer" />}
+                        className="overflow-hidden rounded-2xl border-gray-100 shadow-lg hover:shadow-2xl transition-shadow"
                       >
                         <Title level={4}>{project.title}</Title>
                         <Paragraph className="text-gray-500 mb-4">{project.desc}</Paragraph>
@@ -676,9 +712,9 @@ const App: React.FC = () => {
                   </motion.div>
                   <div className="space-y-8">
                     <motion.div variants={revealItem} className="flex gap-6">
-                      <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                      <motion.div animate={pulseAnimation} className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0 hover:bg-blue-200 transition-colors">
                         <FolderKanbanIcon className="h-5 w-5 text-blue-600" />
-                      </div>
+                      </motion.div>
                       <div>
                         <Title level={4} className="!mb-2">Achievements</Title>
                         <ul className="list-disc pl-5 text-gray-500 space-y-1">
@@ -689,18 +725,18 @@ const App: React.FC = () => {
                       </div>
                     </motion.div>
                     <motion.div variants={revealItem} className="flex gap-6">
-                      <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                      <motion.div animate={pulseAnimation} className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0 hover:bg-blue-200 transition-colors">
                         <UserIcon className="h-5 w-5 text-blue-600" />
-                      </div>
+                      </motion.div>
                       <div>
                         <Title level={4} className="!mb-2">Reference</Title>
                         <Paragraph className="text-gray-500">Mr. Mark Dennis Candel, DepEd Teacher, markdennis.candel@deped.gov.ph, 09516178874.</Paragraph>
                       </div>
                     </motion.div>
                     <motion.div variants={revealItem} className="flex gap-6">
-                      <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                      <motion.div animate={pulseAnimation} className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0 hover:bg-blue-200 transition-colors">
                         <GlobeIcon className="h-5 w-5 text-blue-600" />
-                      </div>
+                      </motion.div>
                       <div>
                         <Title level={4} className="!mb-2">Education Timeline</Title>
                         <ul className="list-disc pl-5 text-gray-500 space-y-1">
