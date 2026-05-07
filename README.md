@@ -2,27 +2,34 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# Portfolio Website
 
-This contains everything you need to run your app locally.
+A fast, responsive personal portfolio website built with **React + TypeScript + Vite**.
 
-View your app in AI Studio: https://ai.studio/apps/ce003ebb-8411-48f3-9b6a-85555935d1ce
+This site is my personal home on the web — it introduces who I am, highlights the projects I’ve built, and makes it easy for someone to contact me or explore my work. The layout is intended to be clean and quick to navigate, with a focus on readability and smooth performance.
+
+What you’ll typically find on the site:
+- A landing/hero section with a short introduction
+- Projects/work highlights (with links and brief descriptions)
+- Skills/experience summary
+- Contact links (email + social profiles)
+
+Tech notes:
+- Built with React + TypeScript for a component-based UI and type safety
+- Vite for a fast dev server and optimized production builds
+- Styling via the CSS files in `src/` (including the Aurora background component)
 
 ## Run Locally
 
 **Prerequisites:**  Node.js
 
-
 1. Install dependencies:
    `npm install`
-2. If you add backend Gemini integration later, store `GEMINI_API_KEY` in server-side environment variables only
-3. Run the app:
+2. Run the app:
    `npm run dev`
 
 ## Vercel Deployment Checklist
 
-1. Keep API secrets off the client. Do not inject `GEMINI_API_KEY` into frontend code.
-2. If Gemini access is needed in production, use a serverless function/API route and read secrets there.
-3. Build output directory is `dist` (default Vite output).
-4. Framework preset on Vercel: `Vite`.
-5. Build command on Vercel: `npm run build`.
+1. Build output directory is `dist` (default Vite output).
+2. Framework preset on Vercel: `Vite`.
+3. Build command on Vercel: `npm run build`.
