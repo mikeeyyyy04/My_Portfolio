@@ -1,28 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import {
-  Layout,
-  Typography,
   Button,
-  Row,
   Col,
-  Card,
-  Timeline,
-  Tag,
+  ConfigProvider,
+  Divider,
   Form,
   Input,
-  Divider,
-  ConfigProvider,
-  Space,
+  Layout,
+  Row,
   Switch,
+  Tag,
+  Timeline,
+  Typography,
   theme as antTheme,
 } from 'antd';
 import {
+  ArrowUpRight as ArrowUpRightIcon,
+  Award as AwardIcon,
+  BriefcaseBusiness as BriefcaseIcon,
+  CalendarDays as CalendarDaysIcon,
   CheckCircle2 as CheckCircle2Icon,
   Code2 as Code2Icon,
   Facebook as FacebookIcon,
   FolderKanban as FolderKanbanIcon,
   Github as GithubIcon,
-  Globe as GlobeIcon,
+  Globe2 as GlobeIcon,
   Instagram as InstagramIcon,
   Linkedin as LinkedinIcon,
   Mail as MailIcon,
@@ -31,12 +34,15 @@ import {
   Moon as MoonIcon,
   Phone as PhoneIcon,
   Send as SendIcon,
+  Sparkles as SparklesIcon,
   Sun as SunIcon,
+  Terminal as TerminalIcon,
   User as UserIcon,
   X as XIcon,
   XCircle as XCircleIcon,
+  Zap as ZapIcon,
 } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react';
 import profileImage from '../assets/id.png';
 import formalImage from '../assets/formal.png';
 import Aurora from './Aurora';
@@ -57,48 +63,173 @@ type ContactFormValues = {
   message: string;
 };
 
+type SkillGroup = {
+  title: string;
+  icon: ReactNode;
+  summary: string;
+  skills: string[];
+  level: number;
+  tone: string;
+};
+
+type Project = {
+  title: string;
+  category: string;
+  desc: string;
+  tags: string[];
+  metrics: string[];
+  icon: ReactNode;
+  tone: string;
+};
+
 const CONTACT_EMAIL = 'leusterestrada@gmail.com';
 
-const heroContainer = {
-  hidden: { opacity: 0, y: 28 },
+const navItems = [
+  { key: 'home', label: 'Home' },
+  { key: 'about', label: 'About' },
+  { key: 'skills', label: 'Skills' },
+  { key: 'projects', label: 'Projects' },
+  { key: 'experience', label: 'Experience' },
+  { key: 'contact', label: 'Contact' },
+];
+
+const heroStats = [
+  { value: '3+', label: 'Featured builds' },
+  { value: '2022', label: 'CpE journey' },
+  { value: '5+', label: 'Leadership roles' },
+];
+
+const heroHighlights = [
+  { label: 'Focus', value: 'Web systems and computer vision' },
+  { label: 'Based in', value: 'Bohol, Philippines' },
+  { label: 'Available for', value: 'Collaboration and student projects' },
+];
+
+const heroStack = ['React', 'TypeScript', 'Python', 'OpenCV', 'C', 'Assembly'];
+
+const socialLinks = [
+  { label: 'GitHub', icon: <GithubIcon />, href: 'https://github.com/mikeeyyyy04' },
+  { label: 'LinkedIn', icon: <LinkedinIcon />, href: 'https://www.linkedin.com/in/mike-leuster-estrada' },
+  { label: 'Facebook', icon: <FacebookIcon />, href: 'https://www.facebook.com/mike.leuster.estrada' },
+  { label: 'Instagram', icon: <InstagramIcon />, href: 'https://www.instagram.com/_mikeeyyyyyy/' },
+];
+
+const focusAreas = [
+  {
+    icon: <TerminalIcon />,
+    title: 'Practical engineering',
+    desc: 'I like building tools that feel useful first, then refining the experience until it feels simple.',
+  },
+  {
+    icon: <SparklesIcon />,
+    title: 'Clear presentation',
+    desc: 'I care about interfaces, documentation, and communication that make technical work easier to trust.',
+  },
+  {
+    icon: <BriefcaseIcon />,
+    title: 'Team leadership',
+    desc: 'Student leadership roles trained me to coordinate people, handle pressure, and follow through.',
+  },
+];
+
+const skillGroups: SkillGroup[] = [
+  {
+    title: 'Software & Systems',
+    icon: <Code2Icon />,
+    summary: 'Foundations for building, debugging, and shipping technical projects.',
+    skills: ['C', 'Assembly', 'Python', 'OpenCV', 'React', 'TypeScript'],
+    level: 82,
+    tone: 'teal',
+  },
+  {
+    title: 'Creative Production',
+    icon: <FolderKanbanIcon />,
+    summary: 'Useful for making projects easier to understand and present.',
+    skills: ['Video Editing', 'Adobe Tools', 'Microsoft Office', 'Documentation'],
+    level: 76,
+    tone: 'amber',
+  },
+  {
+    title: 'Leadership & People',
+    icon: <UserIcon />,
+    summary: 'The soft skills behind collaboration, presentations, and organized execution.',
+    skills: ['Public Speaking', 'Leadership', 'People Management', 'Communication'],
+    level: 88,
+    tone: 'blue',
+  },
+];
+
+const projects: Project[] = [
+  {
+    title: 'Sports Equipment Classification',
+    category: 'Computer Vision',
+    desc: 'A real-time classifier using OpenCV and a CNN trained on Kaggle data to identify sports equipment from visual input.',
+    tags: ['OpenCV', 'CNN', 'Python'],
+    metrics: ['Vision model', 'Live detection', 'Dataset-driven'],
+    icon: <ZapIcon />,
+    tone: 'teal',
+  },
+  {
+    title: 'Appointify',
+    category: 'Full-Stack System',
+    desc: 'A clinic appointment management system with authentication, data persistence, and a focused scheduling workflow.',
+    tags: ['Bun', 'Hono', 'SvelteKit', 'MongoDB'],
+    metrics: ['JWT auth', 'Admin flows', 'Scheduling'],
+    icon: <CalendarDaysIcon />,
+    tone: 'amber',
+  },
+  {
+    title: 'Personal Portfolio',
+    category: 'Web Presence',
+    desc: 'A portfolio experience built around responsive layouts, smooth motion, and clean presentation of technical work.',
+    tags: ['Flutter', 'Dart', 'GitHub Pages'],
+    metrics: ['Responsive UI', 'Project dialogs', 'Deployment'],
+    icon: <GlobeIcon />,
+    tone: 'blue',
+  },
+];
+
+const experienceItems = [
+  {
+    title: 'Institute of Computer Engineering',
+    role: 'Year Level Representative',
+    date: '2023 - Present',
+    desc: 'Supports student coordination and helps organize activities that promote engineering excellence and innovation.',
+  },
+  {
+    title: 'Google Developers Club',
+    role: 'Member',
+    date: 'Active member',
+    desc: 'Participates in community sessions focused on practical developer technologies and collaborative problem solving.',
+  },
+  {
+    title: 'Supreme Student Government',
+    role: 'President',
+    date: '2019 - 2022',
+    desc: 'Represented the student body, led initiatives, and supported policies to improve student life.',
+  },
+];
+
+const achievementItems = [
+  'Graduated Valedictorian at Sikatuna Central Elementary School',
+  'Graduated Salutatorian at Sikatuna National High School',
+  'Radio station guesting at DYRD in 2022',
+];
+
+const educationItems = [
+  'Sikatuna Central Elementary School, 2009 - 2015',
+  'Sikatuna National High School, 2015 - 2020',
+  'Sikatuna National High School GAS, 2020 - 2022',
+  'BS Computer Engineering at BISU, 2022 - present',
+];
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 32 },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.46,
-      ease: 'easeOut',
-      staggerChildren: 0.09,
-      delayChildren: 0.04,
-    },
-  },
-} as const;
-
-const heroItem = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
-} as const;
-
-const fadeUpSection = {
-  hidden: { opacity: 0, y: 36 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.52,
-      ease: 'easeOut',
-      staggerChildren: 0.07,
-      delayChildren: 0.04,
-    },
-  },
-} as const;
-
-const slideLeftSection = {
-  hidden: { opacity: 0, x: -44 },
-  show: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.54,
+      duration: 0.5,
       ease: 'easeOut',
       staggerChildren: 0.08,
       delayChildren: 0.04,
@@ -106,53 +237,20 @@ const slideLeftSection = {
   },
 } as const;
 
-const scaleInSection = {
-  hidden: { opacity: 0, scale: 0.95 },
-  show: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      ease: 'easeOut',
-      staggerChildren: 0.07,
-      delayChildren: 0.04,
-    },
-  },
+const itemVariants = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.32, ease: 'easeOut' } },
 } as const;
 
-const revealItem = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.28, ease: 'easeOut' } },
+const mobileMenuVariants = {
+  hidden: { opacity: 0, y: -12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.18, ease: 'easeOut', staggerChildren: 0.05 } },
+  exit: { opacity: 0, y: -12, transition: { duration: 0.16, ease: 'easeIn' } },
 } as const;
 
-const mobileMenuStagger = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.02 } },
-} as const;
-
-const mobileMenuItem = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.2 } },
-} as const;
-
-const floatingAnimation = {
-  y: [0, -12, 0],
-  transition: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
-} as const;
-
-const pulseAnimation = {
-  scale: [1, 1.05, 1],
-  transition: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
-} as const;
-
-const shimmerAnimation = {
-  backgroundPosition: ['0% 0%', '100% 0%', '0% 0%'],
-  transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
-} as const;
-
-const bounceAnimation = {
-  y: [0, -4, 0],
-  transition: { duration: 0.6, repeat: Infinity, ease: 'easeInOut' },
+const mobileItemVariants = {
+  hidden: { opacity: 0, x: -8 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.18 } },
 } as const;
 
 const App: React.FC = () => {
@@ -169,17 +267,13 @@ const App: React.FC = () => {
   const [formFeedback, setFormFeedback] = useState<FeedbackType | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
-  const [isHoveringTop, setIsHoveringTop] = useState(false);
   const previousScrollY = useRef(0);
-
-  const navItems = [
-    { key: 'home', label: 'Home' },
-    { key: 'about', label: 'About' },
-    { key: 'skills', label: 'Skills' },
-    { key: 'projects', label: 'Projects' },
-    { key: 'experience', label: 'Experience' },
-    { key: 'contact', label: 'Contact' },
-  ];
+  const { scrollYProgress } = useScroll();
+  const progressScale = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.001,
+  });
 
   useEffect(() => {
     const themeMode = isDarkMode ? 'dark' : 'light';
@@ -190,23 +284,23 @@ const App: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
-      if (currentY < 120) {
+      if (currentY < 100) {
         setIsHeaderVisible(true);
-      } else if (currentY > previousScrollY.current + 3) {
+      } else if (currentY > previousScrollY.current + 4) {
         setIsHeaderVisible(false);
-      } else if (currentY < previousScrollY.current - 3) {
+      } else if (currentY < previousScrollY.current - 4) {
         setIsHeaderVisible(true);
       }
       previousScrollY.current = currentY;
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
-    const sectionIds = navItems.map(item => item.key);
-    const sections = sectionIds
-      .map(id => document.getElementById(id))
+    const sections = navItems
+      .map(item => document.getElementById(item.key))
       .filter((section): section is HTMLElement => section !== null);
 
     const observer = new IntersectionObserver(
@@ -220,8 +314,8 @@ const App: React.FC = () => {
         }
       },
       {
-        rootMargin: '-20% 0px -45% 0px',
-        threshold: [0.15, 0.4, 0.65],
+        rootMargin: '-22% 0px -50% 0px',
+        threshold: [0.18, 0.38, 0.62],
       },
     );
 
@@ -232,7 +326,7 @@ const App: React.FC = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       setActiveSection(sectionId);
       setIsMobileMenuOpen(false);
     }
@@ -289,65 +383,56 @@ const App: React.FC = () => {
       theme={{
         algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
         token: {
-          colorPrimary: '#1890ff',
+          colorPrimary: '#0f766e',
           borderRadius: 8,
-          colorBgLayout: isDarkMode ? '#020617' : '#ffffff',
-          colorBgContainer: isDarkMode ? '#0f172a' : '#ffffff',
-          colorTextBase: isDarkMode ? '#e2e8f0' : '#111827',
+          colorBgLayout: isDarkMode ? '#071114' : '#f8faf9',
+          colorBgContainer: isDarkMode ? '#101b20' : '#ffffff',
+          colorTextBase: isDarkMode ? '#e8f1ee' : '#15221f',
+          fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
         },
       }}
     >
-      <Layout className={`app-shell min-h-screen ${isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-white text-slate-900'}`}>
-        <div
-          className="fixed top-0 left-0 right-0 h-12 z-40"
-          onMouseEnter={() => setIsHoveringTop(true)}
-          onMouseLeave={() => setIsHoveringTop(false)}
-        />
+      <Layout className="app-shell min-h-screen">
+        <motion.div className="scroll-progress" style={{ scaleX: progressScale }} />
+
         <motion.div
           initial={false}
-          animate={{ y: isHeaderVisible || isHoveringTop ? 0 : -64, opacity: isHeaderVisible || isHoveringTop ? 1 : 0 }}
+          animate={{ y: isHeaderVisible ? 0 : -78, opacity: isHeaderVisible ? 1 : 0 }}
           transition={{ duration: 0.22, ease: 'easeOut' }}
-          className="fixed top-0 left-0 right-0 z-50"
+          className="fixed left-0 right-0 top-0 z-50"
         >
-          <Header className={`flex items-center justify-between px-4 md:px-12 backdrop-blur-md h-16 ${isDarkMode ? 'bg-slate-950/85 border-b border-slate-800' : 'bg-white/80 border-b border-gray-100'}`}>
-            <div className="flex h-full w-44 items-center justify-start">
-              <Title level={4} className="!my-0 !w-full !text-left !text-blue-600 !leading-none font-bold tracking-tight">
-                PORTFOLIO
-              </Title>
-            </div>
+          <Header className="site-header">
+            <button type="button" className="brand-mark" onClick={() => scrollToSection('home')} aria-label="Go to home">
+              <span className="brand-monogram">ME</span>
+              <span className="brand-copy">
+                <strong>Mike Estrada</strong>
+                <small>Computer Engineering</small>
+              </span>
+            </button>
 
-            <nav className="hidden md:flex items-center gap-2">
+            <nav className="desktop-nav" aria-label="Primary navigation">
               {navItems.map(item => (
                 <button
                   key={item.key}
                   type="button"
                   onClick={() => scrollToSection(item.key)}
-                  className={`animated-link nav-pill relative px-3 py-2 text-sm font-medium transition-colors ${activeSection === item.key ? 'text-blue-600' : 'text-slate-500 hover:text-blue-600'}`}
+                  className={`nav-link ${activeSection === item.key ? 'is-active' : ''}`}
                 >
                   {item.label}
-                  {activeSection === item.key && (
-                    <motion.span
-                      layoutId="active-nav-indicator"
-                      className="absolute left-2 right-2 -bottom-0.5 h-0.5 rounded-full bg-blue-600"
-                      transition={{ type: 'spring', stiffness: 360, damping: 30 }}
-                    />
-                  )}
+                  {activeSection === item.key && <motion.span layoutId="active-nav-pill" className="active-nav-pill" />}
                 </button>
               ))}
             </nav>
 
-            <div className="flex items-center gap-2 md:ml-4">
-              {isDarkMode ? <MoonIcon className="h-4 w-4 text-slate-300" /> : <SunIcon className="h-4 w-4 text-amber-500" />}
-              <Switch
-                checked={isDarkMode}
-                onChange={setIsDarkMode}
-                checkedChildren="Dark"
-                unCheckedChildren="Light"
-              />
+            <div className="header-actions">
+              <div className="theme-switch" aria-label="Theme mode">
+                {isDarkMode ? <MoonIcon /> : <SunIcon />}
+                <Switch checked={isDarkMode} onChange={setIsDarkMode} aria-label="Toggle dark mode" />
+              </div>
               <Button
                 type="text"
-                className="icon-press md:!hidden"
-                icon={isMobileMenuOpen ? <XIcon className="h-4 w-4" /> : <MenuIcon className="h-4 w-4" />}
+                className="icon-button md:!hidden"
+                icon={isMobileMenuOpen ? <XIcon /> : <MenuIcon />}
                 onClick={() => setIsMobileMenuOpen(value => !value)}
                 aria-label="Toggle mobile menu"
               />
@@ -356,190 +441,205 @@ const App: React.FC = () => {
 
           <AnimatePresence>
             {isMobileMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-                className={`md:hidden overflow-hidden border-b ${isDarkMode ? 'bg-slate-950/95 border-slate-800' : 'bg-white/95 border-gray-100'}`}
+              <motion.nav
+                variants={mobileMenuVariants}
+                initial="hidden"
+                animate="show"
+                exit="exit"
+                className="mobile-menu md:hidden"
+                aria-label="Mobile navigation"
               >
-                <motion.ul
-                  variants={mobileMenuStagger}
-                  initial="hidden"
-                  animate="show"
-                  className="px-4 py-3"
-                >
-                  {navItems.map(item => (
-                    <motion.li key={item.key} variants={mobileMenuItem}>
-                      <button
-                        type="button"
-                        onClick={() => scrollToSection(item.key)}
-                        className={`w-full text-left px-2 py-2 rounded-md transition-colors ${activeSection === item.key ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-100'}`}
-                      >
-                        {item.label}
-                      </button>
-                    </motion.li>
-                  ))}
-                </motion.ul>
-              </motion.div>
+                {navItems.map(item => (
+                  <motion.button
+                    key={item.key}
+                    type="button"
+                    variants={mobileItemVariants}
+                    onClick={() => scrollToSection(item.key)}
+                    className={`mobile-menu-link ${activeSection === item.key ? 'is-active' : ''}`}
+                  >
+                    {item.label}
+                    <ChevronIndicator active={activeSection === item.key} />
+                  </motion.button>
+                ))}
+              </motion.nav>
             )}
           </AnimatePresence>
         </motion.div>
 
-        <Content className="pt-16">
-          <section id="home" className="hero-section relative min-h-[90vh] flex items-center justify-center px-4 md:px-12 bg-gradient-to-br from-blue-50 to-white overflow-hidden">
-            <div className="absolute inset-0 opacity-40 pointer-events-none">
-              <Aurora
-                colorStops={['#1a2a6c', '#2d6cdf', '#0b1024']}
-                blend={0.35}
-                amplitude={0.6}
-                speed={0.6}
-              />
+        <Content>
+          <section id="home" className="hero-section section-band">
+            <div className="aurora-layer" aria-hidden="true">
+              <Aurora colorStops={['#0f766e', '#f59e0b', '#2563eb']} blend={0.42} amplitude={0.55} speed={0.58} />
             </div>
-            <div className={`absolute inset-0 pointer-events-none ${isDarkMode ? 'bg-slate-950/35' : 'bg-white/45'}`} />
-            <motion.div
-              className="pointer-events-none absolute -left-20 top-8 h-60 w-60 rounded-full bg-blue-200/40 blur-2xl"
-              animate={{ x: [0, 14, 0], y: [0, 8, 0], borderRadius: ['42% 58% 53% 47%', '58% 42% 46% 54%', '42% 58% 53% 47%'] }}
-              transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <motion.div
-              className="pointer-events-none absolute -right-16 bottom-6 h-72 w-72 rounded-full bg-cyan-200/30 blur-2xl"
-              animate={{ x: [0, -12, 0], y: [0, -10, 0], borderRadius: ['50% 50% 62% 38%', '40% 60% 50% 50%', '50% 50% 62% 38%'] }}
-              transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
-            />
+            <div className="surface-grid" aria-hidden="true" />
 
-            <Row gutter={[32, 32]} align="middle" className="max-w-7xl w-full">
-              <Col xs={24} md={12}>
-                <motion.div variants={heroContainer} initial="hidden" animate="show">
-                  <motion.div variants={heroItem}>
-                    <Text className="text-blue-600 font-semibold uppercase tracking-widest block mb-4">
-                      Welcome to my world
-                    </Text>
-                  </motion.div>
-                  <motion.div variants={heroItem}>
-                    <Title className="!text-5xl md:!text-7xl !mb-6 !font-extrabold">
-                      Hi, I'm <span className="text-blue-600">Mike Leuster Estrada</span>
-                    </Title>
-                  </motion.div>
-                  <motion.div variants={heroItem}>
-                    <Title level={2} className="!text-gray-600 !mb-8 !font-medium">
-                      Computer Engineering Student & Aspiring Software Developer
-                    </Title>
-                  </motion.div>
-                  <motion.div variants={heroItem}>
-                    <Paragraph className="text-lg text-gray-500 max-w-lg mb-8 leading-relaxed">
-                      I build practical and user-focused applications, from machine learning projects to full-stack web systems, while continuously improving my technical and leadership skills.
-                    </Paragraph>
-                  </motion.div>
-                  <motion.div variants={heroItem}>
-                    <Space size="middle">
-                      <motion.div animate={bounceAnimation} className="inline-block">
-                        <Button type="primary" size="large" onClick={() => scrollToSection('projects')} className="interactive-btn h-12 px-8 text-lg font-medium hover:shadow-lg transition-shadow">
-                          View My Work
-                        </Button>
-                      </motion.div>
-                      <motion.div animate={bounceAnimation} className="inline-block ml-4" style={{animationDelay: '0.2s'}}>
-                        <Button size="large" onClick={() => scrollToSection('contact')} className="interactive-btn h-12 px-8 text-lg font-medium hover:shadow-lg transition-shadow">
-                          Contact Me
-                        </Button>
-                      </motion.div>
-                    </Space>
-                  </motion.div>
-                  <motion.div variants={heroItem} className="mt-12 flex gap-6">
-                    <motion.div whileHover={{ scale: 1.2, rotate: 12 }} whileTap={{ scale: 0.95 }}>
-                      <Button type="text" className="icon-press" icon={<GithubIcon className="h-6 w-6" />} href="https://github.com/mikeeyyyy04" target="_blank" />
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.2, rotate: 12 }} whileTap={{ scale: 0.95 }}>
-                      <Button type="text" className="icon-press" icon={<LinkedinIcon className="h-6 w-6" />} href="https://www.linkedin.com/in/mike-leuster-estrada" target="_blank" />
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.2, rotate: 12 }} whileTap={{ scale: 0.95 }}>
-                      <Button type="text" className="icon-press" icon={<FacebookIcon className="h-6 w-6" />} href="https://www.facebook.com/mike.leuster.estrada" target="_blank" />
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.2, rotate: 12 }} whileTap={{ scale: 0.95 }}>
-                      <Button type="text" className="icon-press" icon={<InstagramIcon className="h-6 w-6" />} href="https://www.instagram.com/_mikeeyyyyyy/" target="_blank" />
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.2, rotate: 12 }} whileTap={{ scale: 0.95 }}>
-                      <Button type="text" className="icon-press" icon={<MailIcon className="h-6 w-6" />} onClick={() => scrollToSection('contact')} />
-                    </motion.div>
-                  </motion.div>
+            <div className="section-inner hero-grid">
+              <motion.div variants={sectionVariants} initial="hidden" animate="show" className="hero-copy">
+                <motion.div variants={itemVariants} className="section-kicker">
+                  <SparklesIcon />
+                  Portfolio 2026
                 </motion.div>
-              </Col>
-              <Col xs={24} md={12} className="flex justify-center">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.94 }}
-                  animate={{ opacity: 1, scale: 1, ...floatingAnimation }}
-                  transition={{ duration: 0.44, delay: 0.2, ease: 'easeOut' }}
-                  className="relative"
-                >
-                  <div className="w-64 h-64 md:w-96 md:h-96 rounded-full overflow-hidden border-8 border-white shadow-2xl">
-                    <img
-                      src={profileImage}
-                      alt="Profile"
-                      className="w-full h-full object-contain object-top bg-gray-100"
-                    />
-                  </div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 18 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.28, delay: 0.52 }}
-                    className="absolute -bottom-4 -right-4 bg-white p-6 rounded-2xl shadow-xl hidden md:block"
+                <motion.div variants={itemVariants}>
+                  <Title className="hero-title">
+                    Useful software. Polished interfaces. Practical engineering.
+                  </Title>
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Paragraph className="hero-lede">
+                    I am Mike Leuster Estrada, a Computer Engineering student focused on practical apps,
+                    computer vision, and clear product experiences that people can actually use.
+                  </Paragraph>
+                </motion.div>
+                <motion.div variants={itemVariants} className="hero-actions">
+                  <Button
+                    type="primary"
+                    size="large"
+                    icon={<FolderKanbanIcon />}
+                    onClick={() => scrollToSection('projects')}
+                    className="primary-action"
                   >
-                    <Title level={4} className="!mb-0 text-blue-600">BS Computer Engineering</Title>
-                    <Text className="text-gray-500">Bohol Island State University</Text>
-                  </motion.div>
+                    View Work
+                  </Button>
+                  <Button
+                    size="large"
+                    icon={<SendIcon />}
+                    onClick={() => scrollToSection('contact')}
+                    className="secondary-action"
+                  >
+                    Contact Me
+                  </Button>
                 </motion.div>
-              </Col>
-            </Row>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 28, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.52, delay: 0.16, ease: 'easeOut' }}
+                className="hero-stage"
+              >
+                <motion.aside
+                  className="hero-side-panel hero-side-panel-left"
+                  initial={{ opacity: 0, x: -24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.46, delay: 0.28, ease: 'easeOut' }}
+                >
+                  <div className="panel-icon">
+                    <ZapIcon />
+                  </div>
+                  <span className="dashboard-label">Current Mode</span>
+                  <strong>Building portfolio-ready projects</strong>
+                  <p>Design-minded engineering for apps, vision systems, and useful web experiences.</p>
+                </motion.aside>
+
+                <motion.div
+                  className="portrait-system"
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <div className="portrait-rings" aria-hidden="true" />
+                  <div className="portrait-shell">
+                    <img src={profileImage} alt="Mike Leuster Estrada" className="portrait-image" />
+                  </div>
+                  <div className="signal-card signal-card-top">
+                    <SparklesIcon />
+                    <span>Open to collaboration</span>
+                  </div>
+                  <div className="signal-card signal-card-bottom">
+                    <Code2Icon />
+                    <span>BS Computer Engineering</span>
+                  </div>
+                  <div className="signal-bars" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                </motion.div>
+
+                <motion.aside
+                  className="hero-side-panel hero-side-panel-right"
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.46, delay: 0.34, ease: 'easeOut' }}
+                >
+                  <div className="highlight-list">
+                    {heroHighlights.map(item => (
+                      <div key={item.label} className="highlight-row">
+                        <span>{item.label}</span>
+                        <strong>{item.value}</strong>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="toolbox-block">
+                    <span className="dashboard-label">Toolbox</span>
+                    <div className="hero-stack">
+                      {heroStack.map(tool => (
+                        <span key={tool}>{tool}</span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.aside>
+              </motion.div>
+
+              <motion.div
+                variants={sectionVariants}
+                initial="hidden"
+                animate="show"
+                className="hero-stats"
+                aria-label="Portfolio highlights"
+              >
+                {heroStats.map(stat => (
+                  <motion.div key={stat.label} variants={itemVariants} className="stat-tile">
+                    <strong>{stat.value}</strong>
+                    <span>{stat.label}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
           </section>
 
           <motion.section
             id="about"
-            className="py-24 px-4 md:px-12 bg-white"
-            variants={slideLeftSection}
+            className="section-band about-section"
+            variants={sectionVariants}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
           >
-            <div className="max-w-7xl mx-auto">
-              <Row gutter={[48, 48]} align="middle">
-                <Col xs={24} md={10}>
-                  <motion.img
-                    variants={revealItem}
-                    src={formalImage}
-                    alt="About Me"
-                    className="w-full rounded-3xl shadow-xl"
-                    referrerPolicy="no-referrer"
-                  />
+            <div className="section-inner">
+              <Row gutter={[40, 40]} align="middle">
+                <Col xs={24} lg={10}>
+                  <motion.div variants={itemVariants} className="image-feature">
+                    <img src={formalImage} alt="Formal portrait of Mike Leuster Estrada" />
+                    <div className="image-feature-caption">
+                      <span>Bohol Island State University</span>
+                      <strong>Student Developer</strong>
+                    </div>
+                  </motion.div>
                 </Col>
-                <Col xs={24} md={14}>
-                  <motion.div variants={revealItem}>
-                    <Title level={2} className="!mb-8">About Me</Title>
-                  </motion.div>
-                  <motion.div variants={revealItem}>
-                    <Paragraph className="text-lg text-gray-600 mb-6">
-                      I am Mike Leuster Estrada, a Bachelor of Science in Computer Engineering student at Bohol Island State University. I enjoy building real-world software that solves practical problems.
+                <Col xs={24} lg={14}>
+                  <motion.div variants={itemVariants} className="section-heading">
+                    <div className="section-kicker">
+                      <UserIcon />
+                      About
+                    </div>
+                    <Title level={2}>A builder who cares about the full experience.</Title>
+                    <Paragraph>
+                      My work sits between engineering, presentation, and service. I enjoy turning complex
+                      ideas into usable systems, whether that means a machine learning demo, a management
+                      platform, or a portfolio that communicates clearly.
                     </Paragraph>
                   </motion.div>
-                  <motion.div variants={revealItem}>
-                    <Paragraph className="text-lg text-gray-600 mb-8">
-                      My portfolio includes projects in computer vision, clinic management systems, and web deployment workflows. I also take active leadership roles in student organizations and community-driven tech groups.
-                    </Paragraph>
-                  </motion.div>
-                  <motion.div variants={revealItem}>
-                    <Row gutter={[16, 16]}>
-                      <Col span={12}>
-                        <div className="p-4 bg-gray-50 rounded-xl">
-                          <Title level={4} className="!mb-1">Education</Title>
-                          <Text className="text-gray-500">BS Computer Engineering (2022 - present)</Text>
-                        </div>
-                      </Col>
-                      <Col span={12}>
-                        <div className="p-4 bg-gray-50 rounded-xl">
-                          <Title level={4} className="!mb-1">Location</Title>
-                          <Text className="text-gray-500">Purok 3, Canagong, Sikatuna, Bohol</Text>
-                        </div>
-                      </Col>
-                    </Row>
+
+                  <motion.div variants={itemVariants} className="focus-grid">
+                    {focusAreas.map(area => (
+                      <article key={area.title} className="focus-card">
+                        <div className="focus-icon">{area.icon}</div>
+                        <h3>{area.title}</h3>
+                        <p>{area.desc}</p>
+                      </article>
+                    ))}
                   </motion.div>
                 </Col>
               </Row>
@@ -548,101 +648,131 @@ const App: React.FC = () => {
 
           <motion.section
             id="skills"
-            className="py-24 px-4 md:px-12 bg-gray-50"
-            variants={scaleInSection}
+            className="section-band skills-section"
+            variants={sectionVariants}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
           >
-            <div className="max-w-7xl mx-auto text-center mb-16">
-              <motion.div variants={revealItem}>
-                <Title level={2}>My Expertise</Title>
-              </motion.div>
-              <motion.div variants={revealItem}>
-                <Paragraph className="text-lg text-gray-500">
-                  The tools and technologies I use to bring projects to life.
+            <div className="section-inner">
+              <motion.div variants={itemVariants} className="section-heading centered">
+                <div className="section-kicker">
+                  <Code2Icon />
+                  Capabilities
+                </div>
+                <Title level={2}>Balanced technical and people skills.</Title>
+                <Paragraph>
+                  A focused stack for student engineering projects, supported by communication and creative production.
                 </Paragraph>
               </motion.div>
-            </div>
-            <div className="max-w-7xl mx-auto">
-              <Row gutter={[24, 24]}>
-                {[
-                  { title: 'Technical Skills', icon: <Code2Icon className="h-9 w-9" />, skills: ['C and Assembly', 'Video Editing', 'Microsoft Office', 'Adobe Softwares'] },
-                  { title: 'Soft Skills', icon: <UserIcon className="h-9 w-9" />, skills: ['Public Speaking', 'Leadership', 'People Management', 'Communication'] },
-                  { title: 'Interests', icon: <FolderKanbanIcon className="h-9 w-9" />, skills: ['Badminton', 'Volleyball', 'Music', 'Reading Books'] },
-                ].map((category, idx) => (
-                  <Col xs={24} md={8} key={idx}>
-                    <motion.div
-                      variants={revealItem}
-                      animate={floatingAnimation}
-                      whileHover={{ rotateX: 2, rotateY: -2, y: -8, scale: 1.02 }}
-                      transition={{ duration: 0.2, ease: 'easeOut' }}
-                      className="card-tilt"
-                    >
-                      <Card className="h-full border-none rounded-2xl 2xl:shadow-xl 2xl:hover:shadow-2xl transition-shadow">
-                        <motion.div animate={pulseAnimation} className="text-4xl text-blue-600 mb-6">{category.icon}</motion.div>
-                        <Title level={3} className="!mb-6">{category.title}</Title>
-                        <div className="flex flex-wrap gap-2">
-                          {category.skills.map(skill => (
-                            <Tag key={skill} className="px-4 py-1 text-sm rounded-full border-blue-100 bg-blue-50 text-blue-600">
-                              {skill}
-                            </Tag>
-                          ))}
+
+              <Row gutter={[20, 20]} className="skill-grid">
+                {skillGroups.map(group => (
+                  <Col xs={24} md={8} key={group.title}>
+                    <motion.article variants={itemVariants} whileHover={{ y: -6 }} className={`skill-card tone-${group.tone}`}>
+                      <div className="card-heading">
+                        <div className="card-icon">{group.icon}</div>
+                        <div>
+                          <h3>{group.title}</h3>
+                          <p>{group.summary}</p>
                         </div>
-                      </Card>
-                    </motion.div>
+                      </div>
+                      <div className="skill-meter" aria-label={`${group.title} strength`}>
+                        <motion.span
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${group.level}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.8, ease: 'easeOut' }}
+                        />
+                      </div>
+                      <div className="tag-cloud">
+                        {group.skills.map(skill => (
+                          <Tag key={skill}>{skill}</Tag>
+                        ))}
+                      </div>
+                    </motion.article>
                   </Col>
                 ))}
               </Row>
+
+              <motion.div variants={itemVariants} className="marquee-panel" aria-label="Technology highlights">
+                <div className="marquee-track">
+                  {[...skillGroups.flatMap(group => group.skills), ...skillGroups.flatMap(group => group.skills)].map((skill, index) => (
+                    <span key={`${skill}-${index}`}>{skill}</span>
+                  ))}
+                </div>
+              </motion.div>
             </div>
           </motion.section>
 
           <motion.section
             id="projects"
-            className="py-24 px-4 md:px-12 bg-white"
-            variants={fadeUpSection}
+            className="section-band projects-section"
+            variants={sectionVariants}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
           >
-            <div className="max-w-7xl mx-auto text-center mb-16">
-              <motion.div variants={revealItem}>
-                <Title level={2}>Featured Projects</Title>
-              </motion.div>
-              <motion.div variants={revealItem}>
-                <Paragraph className="text-lg text-gray-500">
-                  A selection of my recent work and personal experiments.
+            <div className="section-inner">
+              <motion.div variants={itemVariants} className="section-heading centered">
+                <div className="section-kicker">
+                  <FolderKanbanIcon />
+                  Selected Work
+                </div>
+                <Title level={2}>Projects with practical outcomes.</Title>
+                <Paragraph>
+                  Each project is framed around a clear use case, a focused stack, and a user-facing result.
                 </Paragraph>
               </motion.div>
-            </div>
-            <div className="max-w-7xl mx-auto">
-              <Row gutter={[32, 32]}>
-                {[
-                  { title: 'Sports-Equipment-Classification-Using-OpenCV', desc: 'A machine learning app using OpenCV and a CNN trained on Kaggle data for real-time sports equipment classification.', tags: ['OpenCV', 'CNN', 'Python'], img: 'https://picsum.photos/seed/opencv/800/500' },
-                  { title: 'Appointify', desc: 'A clinic appointment management system with Bun/Hono backend and SvelteKit frontend, plus JWT and MongoDB.', tags: ['Bun', 'Hono', 'SvelteKit'], img: 'https://picsum.photos/seed/clinic/800/500' },
-                  { title: 'Personal Portfolio', desc: 'A Flutter and Dart web portfolio with responsive layouts, project dialogs, and GitHub deployment workflow.', tags: ['Flutter', 'Dart', 'GitHub Pages'], img: 'https://picsum.photos/seed/portfolio/800/500' },
-                ].map((project, idx) => (
-                  <Col xs={24} md={8} key={idx}>
-                    <motion.div
-                      variants={revealItem}
-                      animate={floatingAnimation}
-                      whileHover={{ rotateX: 2, rotateY: -2, y: -8, scale: 1.03 }}
-                      transition={{ duration: 0.2, ease: 'easeOut' }}
-                      className="card-tilt"
+
+              <Row gutter={[20, 20]}>
+                {projects.map((project, index) => (
+                  <Col xs={24} lg={8} key={project.title}>
+                    <motion.article
+                      variants={itemVariants}
+                      whileHover={{ y: -8 }}
+                      className={`project-card tone-${project.tone}`}
                     >
-                      <Card
-                        hoverable
-                        cover={<motion.img alt={project.title} src={project.img} className="h-48 object-cover transition-transform duration-500" whileHover={{scale: 1.08}} referrerPolicy="no-referrer" />}
-                        className="overflow-hidden rounded-2xl border-gray-100 shadow-lg hover:shadow-2xl transition-shadow"
-                      >
-                        <Title level={4}>{project.title}</Title>
-                        <Paragraph className="text-gray-500 mb-4">{project.desc}</Paragraph>
-                        <div className="flex gap-2 mb-6">
-                          {project.tags.map(tag => <Tag key={tag} color="blue">{tag}</Tag>)}
+                      <div className="project-preview" aria-hidden="true">
+                        <div className="preview-toolbar">
+                          <span />
+                          <span />
+                          <span />
                         </div>
-                        <Button type="link" className="animated-link p-0 text-blue-600 font-medium">View Project →</Button>
-                      </Card>
-                    </motion.div>
+                        <div className="preview-content">
+                          <motion.div
+                            className="preview-icon"
+                            animate={{ rotate: [0, 4, -4, 0], scale: [1, 1.04, 1] }}
+                            transition={{ duration: 4 + index, repeat: Infinity, ease: 'easeInOut' }}
+                          >
+                            {project.icon}
+                          </motion.div>
+                          <div className="preview-lines">
+                            <span />
+                            <span />
+                            <span />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="project-content">
+                        <span className="project-category">{project.category}</span>
+                        <h3>{project.title}</h3>
+                        <p>{project.desc}</p>
+                        <div className="metric-list">
+                          {project.metrics.map(metric => (
+                            <span key={metric}>
+                              <CheckCircle2Icon />
+                              {metric}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="tag-cloud">
+                          {project.tags.map(tag => (
+                            <Tag key={tag}>{tag}</Tag>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.article>
                   </Col>
                 ))}
               </Row>
@@ -651,103 +781,73 @@ const App: React.FC = () => {
 
           <motion.section
             id="experience"
-            className="py-24 px-4 md:px-12 bg-gray-50"
-            variants={slideLeftSection}
+            className="section-band experience-section"
+            variants={sectionVariants}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
           >
-            <div className="max-w-7xl mx-auto">
-              <Row gutter={[48, 48]}>
-                <Col xs={24} md={12}>
-                  <motion.div variants={revealItem}>
-                    <Title level={2} className="!mb-12">Work Experience</Title>
+            <div className="section-inner">
+              <Row gutter={[36, 36]}>
+                <Col xs={24} lg={12}>
+                  <motion.div variants={itemVariants} className="section-heading">
+                    <div className="section-kicker">
+                      <BriefcaseIcon />
+                      Experience
+                    </div>
+                    <Title level={2}>Leadership shaped by real responsibilities.</Title>
                   </motion.div>
-                  <motion.div variants={revealItem}>
+
+                  <motion.div variants={itemVariants} className="timeline-panel">
                     <Timeline
-                      items={[
-                        {
-                          color: 'blue',
-                          children: (
-                            <div className="pb-8">
-                              <Title level={4} className="!mb-1">Institute of Computer Engineering</Title>
-                              <Text className="text-blue-600 font-medium block mb-2">Year Level Representative | 2023 - Present</Text>
-                              <Paragraph className="text-gray-500">
-                                Tagbilaran City, Bohol, Philippines. Supports student coordination and helps organize activities that promote engineering excellence and innovation.
-                              </Paragraph>
-                            </div>
-                          ),
-                        },
-                        {
-                          color: 'gray',
-                          children: (
-                            <div className="pb-8">
-                              <Title level={4} className="!mb-1">Google Developers Club</Title>
-                              <Text className="text-blue-600 font-medium block mb-2">Member</Text>
-                              <Paragraph className="text-gray-500">
-                                Tagbilaran City, Bohol, Philippines. Participates in community sessions where students learn practical developer technologies and collaborative problem solving.
-                              </Paragraph>
-                            </div>
-                          ),
-                        },
-                        {
-                          color: 'gray',
-                          children: (
-                            <div>
-                              <Title level={4} className="!mb-1">Supreme Student Government</Title>
-                              <Text className="text-blue-600 font-medium block mb-2">President | 2019 - 2022</Text>
-                              <Paragraph className="text-gray-500">
-                                Tagbilaran City, Bohol, Philippines. Represented the student body, led initiatives, and supported policies to improve student life.
-                              </Paragraph>
-                            </div>
-                          ),
-                        },
-                      ]}
+                      items={experienceItems.map(item => ({
+                        color: 'green',
+                        children: (
+                          <div className="timeline-item">
+                            <h3>{item.title}</h3>
+                            <span>{item.role} | {item.date}</span>
+                            <p>{item.desc}</p>
+                          </div>
+                        ),
+                      }))}
                     />
                   </motion.div>
                 </Col>
-                <Col xs={24} md={12}>
-                  <motion.div variants={revealItem}>
-                    <Title level={2} className="!mb-12">Achievements & Reference</Title>
+
+                <Col xs={24} lg={12}>
+                  <motion.div variants={itemVariants} className="insight-grid">
+                    <article className="insight-card">
+                      <div className="card-heading compact">
+                        <div className="card-icon"><AwardIcon /></div>
+                        <h3>Achievements</h3>
+                      </div>
+                      <ul>
+                        {achievementItems.map(item => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </article>
+                    <article className="insight-card">
+                      <div className="card-heading compact">
+                        <div className="card-icon"><GlobeIcon /></div>
+                        <h3>Education Timeline</h3>
+                      </div>
+                      <ul>
+                        {educationItems.map(item => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </article>
+                    <article className="insight-card reference-card">
+                      <div className="card-heading compact">
+                        <div className="card-icon"><UserIcon /></div>
+                        <h3>Reference</h3>
+                      </div>
+                      <p>Mr. Mark Dennis Candel, DepEd Teacher</p>
+                      <p>markdennis.candel@deped.gov.ph</p>
+                      <p>09516178874</p>
+                    </article>
                   </motion.div>
-                  <div className="space-y-8">
-                    <motion.div variants={revealItem} className="flex gap-6">
-                      <motion.div animate={pulseAnimation} className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0 hover:bg-blue-200 transition-colors">
-                        <FolderKanbanIcon className="h-5 w-5 text-blue-600" />
-                      </motion.div>
-                      <div>
-                        <Title level={4} className="!mb-2">Achievements</Title>
-                        <ul className="list-disc pl-5 text-gray-500 space-y-1">
-                          <li>Graduated Valedictorian (Sikatuna Central Elementary School)</li>
-                          <li>Graduated Salutatorian (Sikatuna National High School)</li>
-                          <li>Radio Station Guesting (DYRD, 2022)</li>
-                        </ul>
-                      </div>
-                    </motion.div>
-                    <motion.div variants={revealItem} className="flex gap-6">
-                      <motion.div animate={pulseAnimation} className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0 hover:bg-blue-200 transition-colors">
-                        <UserIcon className="h-5 w-5 text-blue-600" />
-                      </motion.div>
-                      <div>
-                        <Title level={4} className="!mb-2">Reference</Title>
-                        <Paragraph className="text-gray-500">Mr. Mark Dennis Candel, DepEd Teacher, markdennis.candel@deped.gov.ph, 09516178874.</Paragraph>
-                      </div>
-                    </motion.div>
-                    <motion.div variants={revealItem} className="flex gap-6">
-                      <motion.div animate={pulseAnimation} className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0 hover:bg-blue-200 transition-colors">
-                        <GlobeIcon className="h-5 w-5 text-blue-600" />
-                      </motion.div>
-                      <div>
-                        <Title level={4} className="!mb-2">Education Timeline</Title>
-                        <ul className="list-disc pl-5 text-gray-500 space-y-1">
-                          <li>Sikatuna Central Elementary School (2009 - 2015)</li>
-                          <li>Sikatuna National High School (2015 - 2020)</li>
-                          <li>Sikatuna National High School GAS (2020 - 2022)</li>
-                          <li>BS Computer Engineering at BISU (2022 - present)</li>
-                        </ul>
-                      </div>
-                    </motion.div>
-                  </div>
                 </Col>
               </Row>
             </div>
@@ -755,103 +855,114 @@ const App: React.FC = () => {
 
           <motion.section
             id="contact"
-            className="py-24 px-4 md:px-12 bg-white"
-            variants={scaleInSection}
+            className="section-band contact-section"
+            variants={sectionVariants}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
           >
-            <div className="max-w-7xl mx-auto">
-              <Row gutter={[48, 48]}>
-                <Col xs={24} md={10}>
-                  <motion.div variants={revealItem}>
-                    <Title level={2} className="!mb-6">Get In Touch</Title>
-                  </motion.div>
-                  <motion.div variants={revealItem}>
-                    <Paragraph className="text-lg text-gray-500 mb-12">
-                      Have a project in mind or just want to say hi? Feel free to reach out!
+            <div className="section-inner">
+              <Row gutter={[36, 36]} align="stretch">
+                <Col xs={24} lg={10}>
+                  <motion.div variants={itemVariants} className="contact-aside">
+                    <div className="section-kicker">
+                      <MailIcon />
+                      Contact
+                    </div>
+                    <Title level={2}>Let us build something clear and useful.</Title>
+                    <Paragraph>
+                      Reach out for collaboration, school projects, developer communities, or opportunities where
+                      practical engineering and careful presentation matter.
                     </Paragraph>
-                  </motion.div>
-                  <div className="space-y-6">
-                    <motion.div variants={revealItem} className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                        <MailIcon className="h-4 w-4 text-blue-600" />
-                      </div>
-                      <Text className="text-lg">leusterestrada@gmail.com</Text>
-                    </motion.div>
-                    <motion.div variants={revealItem} className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                        <PhoneIcon className="h-4 w-4 text-blue-600" />
-                      </div>
-                      <Text className="text-lg">09649796538</Text>
-                    </motion.div>
-                    <motion.div variants={revealItem} className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                        <MapPinIcon className="h-4 w-4 text-blue-600" />
-                      </div>
-                      <Text className="text-lg">Purok 3, Canagong, Sikatuna, Bohol</Text>
-                    </motion.div>
-                  </div>
-                </Col>
-                <Col xs={24} md={14}>
-                  <motion.div variants={revealItem}>
-                    <Card className="shadow-2xl border-none rounded-3xl p-4 md:p-8">
-                      <AnimatePresence mode="wait">
-                        {formFeedback && (
-                          <motion.div
-                            key={formFeedback.type}
-                            initial={{ opacity: 0, y: -8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -8 }}
-                            transition={{ duration: 0.2 }}
-                            className={`mb-5 rounded-lg px-4 py-3 flex items-center gap-3 ${formFeedback.type === 'success' ? 'form-feedback-success' : 'form-feedback-error'}`}
-                          >
-                            {formFeedback.type === 'success' ? <CheckCircle2Icon className="h-4 w-4" /> : <XCircleIcon className="h-4 w-4" />}
-                            <span>{formFeedback.message}</span>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
 
-                      <Form
-                        form={contactForm}
-                        layout="vertical"
-                        size="large"
-                        className="contact-form"
-                        onFinish={onSubmit}
-                        onFinishFailed={onSubmitFailed}
-                      >
-                        <Row gutter={16}>
-                          <Col span={12}>
-                            <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please enter your name' }]}>
-                              <Input placeholder="Your Name" className="rounded-lg" />
-                            </Form.Item>
-                          </Col>
-                          <Col span={12}>
-                            <Form.Item
-                              label="Email"
-                              name="email"
-                              rules={[
-                                { required: true, message: 'Please enter your email' },
-                                { type: 'email', message: 'Please enter a valid email address' },
-                              ]}
-                            >
-                              <Input placeholder="Your Email" className="rounded-lg" />
-                            </Form.Item>
-                          </Col>
-                        </Row>
-                        <Form.Item label="Subject" name="subject">
-                          <Input placeholder="Subject" className="rounded-lg" />
-                        </Form.Item>
-                        <Form.Item label="Message" name="message" rules={[{ required: true, message: 'Please add your message' }]}>
-                          <Input.TextArea rows={4} placeholder="Your Message" className="rounded-lg" />
-                        </Form.Item>
-                        <Form.Item className="mb-0">
-                          <Button type="primary" icon={<SendIcon className="h-4 w-4" />} htmlType="submit" loading={isSubmitting} className="interactive-btn w-full h-12 rounded-lg font-semibold">
-                            Send Message
-                          </Button>
-                        </Form.Item>
-                      </Form>
-                    </Card>
+                    <div className="contact-list">
+                      <a href={`mailto:${CONTACT_EMAIL}`}>
+                        <MailIcon />
+                        <span>{CONTACT_EMAIL}</span>
+                      </a>
+                      <a href="tel:+639649796538">
+                        <PhoneIcon />
+                        <span>09649796538</span>
+                      </a>
+                      <span>
+                        <MapPinIcon />
+                        <span>Purok 3, Canagong, Sikatuna, Bohol</span>
+                      </span>
+                    </div>
+
+                    <div className="social-row" aria-label="Social links">
+                      {socialLinks.map(link => (
+                        <Button
+                          key={link.label}
+                          type="text"
+                          className="social-button"
+                          icon={link.icon}
+                          href={link.href}
+                          target="_blank"
+                          aria-label={link.label}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+                </Col>
+
+                <Col xs={24} lg={14}>
+                  <motion.div variants={itemVariants} className="contact-panel">
+                    <AnimatePresence mode="wait">
+                      {formFeedback && (
+                        <motion.div
+                          key={formFeedback.type}
+                          initial={{ opacity: 0, y: -8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.2 }}
+                          className={`form-feedback ${formFeedback.type === 'success' ? 'is-success' : 'is-error'}`}
+                        >
+                          {formFeedback.type === 'success' ? <CheckCircle2Icon /> : <XCircleIcon />}
+                          <span>{formFeedback.message}</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <Form
+                      form={contactForm}
+                      layout="vertical"
+                      size="large"
+                      className="contact-form"
+                      onFinish={onSubmit}
+                      onFinishFailed={onSubmitFailed}
+                    >
+                      <Row gutter={16}>
+                        <Col xs={24} sm={12}>
+                          <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please enter your name' }]}>
+                            <Input placeholder="Your name" />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12}>
+                          <Form.Item
+                            label="Email"
+                            name="email"
+                            rules={[
+                              { required: true, message: 'Please enter your email' },
+                              { type: 'email', message: 'Please enter a valid email address' },
+                            ]}
+                          >
+                            <Input placeholder="your.email@example.com" />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <Form.Item label="Subject" name="subject">
+                        <Input placeholder="What would you like to discuss?" />
+                      </Form.Item>
+                      <Form.Item label="Message" name="message" rules={[{ required: true, message: 'Please add your message' }]}>
+                        <Input.TextArea rows={5} placeholder="Tell me a little about the idea, timeline, or opportunity." />
+                      </Form.Item>
+                      <Form.Item className="mb-0">
+                        <Button type="primary" icon={<SendIcon />} htmlType="submit" loading={isSubmitting} className="submit-button">
+                          Send Message
+                        </Button>
+                      </Form.Item>
+                    </Form>
                   </motion.div>
                 </Col>
               </Row>
@@ -859,28 +970,34 @@ const App: React.FC = () => {
           </motion.section>
         </Content>
 
-        <Footer className="bg-gray-900 text-white py-12 px-4 md:px-12">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+        <Footer className="site-footer">
+          <div className="section-inner footer-inner">
             <div>
-              <Title level={3} className="!text-white !mb-2">Mike Leuster Estrada</Title>
-              <Text className="text-gray-400">Computer Engineering student building practical and impactful software.</Text>
+              <Title level={3}>Mike Leuster Estrada</Title>
+              <Text>Computer Engineering student building practical and polished software experiences.</Text>
             </div>
-            <div className="flex gap-4">
-              <Button type="text" className="icon-press" icon={<GithubIcon className="h-5 w-5 text-gray-400 hover:text-white" />} href="https://github.com/mikeeyyyy04" target="_blank" />
-              <Button type="text" className="icon-press" icon={<LinkedinIcon className="h-5 w-5 text-gray-400 hover:text-white" />} href="https://www.linkedin.com/in/mike-leuster-estrada" target="_blank" />
-              <Button type="text" className="icon-press" icon={<FacebookIcon className="h-5 w-5 text-gray-400 hover:text-white" />} href="https://www.facebook.com/mike.leuster.estrada" target="_blank" />
-              <Button type="text" className="icon-press" icon={<InstagramIcon className="h-5 w-5 text-gray-400 hover:text-white" />} href="https://www.instagram.com/_mikeeyyyyyy/" target="_blank" />
-              <Button type="text" className="icon-press" icon={<MailIcon className="h-5 w-5 text-gray-400 hover:text-white" />} onClick={() => scrollToSection('contact')} />
-            </div>
+            <Button type="primary" icon={<ArrowUpRightIcon />} onClick={() => scrollToSection('home')} className="footer-top-button">
+              Back to top
+            </Button>
           </div>
-          <Divider className="border-gray-800 my-8" />
-          <div className="text-center text-gray-500">
-            © {new Date().getFullYear()} Mike Leuster Estrada. All rights reserved.
+          <Divider />
+          <div className="footer-credit">
+            &copy; {new Date().getFullYear()} Mike Leuster Estrada. All rights reserved.
           </div>
         </Footer>
       </Layout>
     </ConfigProvider>
   );
 };
+
+type ChevronIndicatorProps = {
+  active: boolean;
+};
+
+const ChevronIndicator = ({ active }: ChevronIndicatorProps) => (
+  <span className={`mobile-indicator ${active ? 'is-active' : ''}`} aria-hidden="true">
+    <ArrowUpRightIcon />
+  </span>
+);
 
 export default App;
