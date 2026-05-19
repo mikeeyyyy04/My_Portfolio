@@ -4,10 +4,10 @@ import {
   Button,
   Col,
   ConfigProvider,
-  Divider,
   Form,
   Input,
   Layout,
+  Modal,
   Row,
   Switch,
   Tag,
@@ -34,7 +34,6 @@ import {
   Moon as MoonIcon,
   Phone as PhoneIcon,
   Send as SendIcon,
-  Sparkles as SparklesIcon,
   Sun as SunIcon,
   Terminal as TerminalIcon,
   User as UserIcon,
@@ -43,9 +42,8 @@ import {
   Zap as ZapIcon,
 } from 'lucide-react';
 import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react';
-import profileImage from '../assets/id.png';
 import formalImage from '../assets/formal.png';
-import Aurora from './Aurora';
+import ImmersiveScene from './ImmersiveScene';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -69,17 +67,16 @@ type SkillGroup = {
   summary: string;
   skills: string[];
   level: number;
-  tone: string;
 };
 
 type Project = {
   title: string;
   category: string;
   desc: string;
+  imageLabel: string;
   tags: string[];
   metrics: string[];
   icon: ReactNode;
-  tone: string;
 };
 
 const CONTACT_EMAIL = 'leusterestrada@gmail.com';
@@ -99,14 +96,6 @@ const heroStats = [
   { value: '5+', label: 'Leadership roles' },
 ];
 
-const heroHighlights = [
-  { label: 'Focus', value: 'Web systems and computer vision' },
-  { label: 'Based in', value: 'Bohol, Philippines' },
-  { label: 'Available for', value: 'Collaboration and student projects' },
-];
-
-const heroStack = ['React', 'TypeScript', 'Python', 'OpenCV', 'C', 'Assembly'];
-
 const socialLinks = [
   { label: 'GitHub', icon: <GithubIcon />, href: 'https://github.com/mikeeyyyy04' },
   { label: 'LinkedIn', icon: <LinkedinIcon />, href: 'https://www.linkedin.com/in/mike-leuster-estrada' },
@@ -121,8 +110,8 @@ const focusAreas = [
     desc: 'I like building tools that feel useful first, then refining the experience until it feels simple.',
   },
   {
-    icon: <SparklesIcon />,
-    title: 'Clear presentation',
+    icon: <Code2Icon />,
+    title: 'Clear product thinking',
     desc: 'I care about interfaces, documentation, and communication that make technical work easier to trust.',
   },
   {
@@ -139,7 +128,6 @@ const skillGroups: SkillGroup[] = [
     summary: 'Foundations for building, debugging, and shipping technical projects.',
     skills: ['C', 'Assembly', 'Python', 'OpenCV', 'React', 'TypeScript'],
     level: 82,
-    tone: 'teal',
   },
   {
     title: 'Creative Production',
@@ -147,7 +135,6 @@ const skillGroups: SkillGroup[] = [
     summary: 'Useful for making projects easier to understand and present.',
     skills: ['Video Editing', 'Adobe Tools', 'Microsoft Office', 'Documentation'],
     level: 76,
-    tone: 'amber',
   },
   {
     title: 'Leadership & People',
@@ -155,37 +142,44 @@ const skillGroups: SkillGroup[] = [
     summary: 'The soft skills behind collaboration, presentations, and organized execution.',
     skills: ['Public Speaking', 'Leadership', 'People Management', 'Communication'],
     level: 88,
-    tone: 'blue',
   },
 ];
+
+const LEADERSHIP_PDF_ID = '1XWDumnLjV8qNG8zhQS90rzJZMa8YZgOM';
+const LEADERSHIP_PDF_VIEW_URL = `https://drive.google.com/file/d/${LEADERSHIP_PDF_ID}/view?usp=sharing`;
+const LEADERSHIP_PDF_EMBED_URL = `https://drive.google.com/file/d/${LEADERSHIP_PDF_ID}/preview`;
+
+const CREATIVE_PDF_ID = '18v-n3Q-ABDeBpqGI_ysByb9IDqLN7ROl';
+const CREATIVE_PDF_VIEW_URL = `https://drive.google.com/file/d/${CREATIVE_PDF_ID}/view?usp=sharing`;
+const CREATIVE_PDF_EMBED_URL = `https://drive.google.com/file/d/${CREATIVE_PDF_ID}/preview`;
 
 const projects: Project[] = [
   {
     title: 'Sports Equipment Classification',
     category: 'Computer Vision',
     desc: 'A real-time classifier using OpenCV and a CNN trained on Kaggle data to identify sports equipment from visual input.',
+    imageLabel: 'Vision Model Preview',
     tags: ['OpenCV', 'CNN', 'Python'],
     metrics: ['Vision model', 'Live detection', 'Dataset-driven'],
     icon: <ZapIcon />,
-    tone: 'teal',
   },
   {
     title: 'Appointify',
     category: 'Full-Stack System',
     desc: 'A clinic appointment management system with authentication, data persistence, and a focused scheduling workflow.',
+    imageLabel: 'Scheduling Dashboard',
     tags: ['Bun', 'Hono', 'SvelteKit', 'MongoDB'],
     metrics: ['JWT auth', 'Admin flows', 'Scheduling'],
     icon: <CalendarDaysIcon />,
-    tone: 'amber',
   },
   {
     title: 'Personal Portfolio',
     category: 'Web Presence',
     desc: 'A portfolio experience built around responsive layouts, smooth motion, and clean presentation of technical work.',
+    imageLabel: 'Responsive Portfolio',
     tags: ['Flutter', 'Dart', 'GitHub Pages'],
     metrics: ['Responsive UI', 'Project dialogs', 'Deployment'],
     icon: <GlobeIcon />,
-    tone: 'blue',
   },
 ];
 
@@ -224,38 +218,41 @@ const educationItems = [
 ];
 
 const sectionVariants = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 24 },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.5,
+      duration: 0.42,
       ease: 'easeOut',
-      staggerChildren: 0.08,
-      delayChildren: 0.04,
+      staggerChildren: 0.06,
+      delayChildren: 0.02,
     },
   },
 } as const;
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.32, ease: 'easeOut' } },
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.28, ease: 'easeOut' } },
 } as const;
 
 const mobileMenuVariants = {
-  hidden: { opacity: 0, y: -12 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.18, ease: 'easeOut', staggerChildren: 0.05 } },
-  exit: { opacity: 0, y: -12, transition: { duration: 0.16, ease: 'easeIn' } },
+  hidden: { opacity: 0, y: -8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.16, ease: 'easeOut', staggerChildren: 0.04 } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.14, ease: 'easeIn' } },
 } as const;
 
 const mobileItemVariants = {
-  hidden: { opacity: 0, x: -8 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.18 } },
+  hidden: { opacity: 0, y: -4 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.16 } },
 } as const;
 
 const App: React.FC = () => {
   const [contactForm] = Form.useForm<ContactFormValues>();
   const [activeSection, setActiveSection] = useState('home');
+  const [isLeadershipModalOpen, setIsLeadershipModalOpen] = useState(false);
+  const [isLeadershipModalPinned, setIsLeadershipModalPinned] = useState(false);
+  const [isCreativeModalOpen, setIsCreativeModalOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem('themeMode');
     if (savedTheme === 'dark' || savedTheme === 'light') {
@@ -314,7 +311,7 @@ const App: React.FC = () => {
         }
       },
       {
-        rootMargin: '-22% 0px -50% 0px',
+        rootMargin: '-24% 0px -54% 0px',
         threshold: [0.18, 0.38, 0.62],
       },
     );
@@ -378,27 +375,46 @@ const App: React.FC = () => {
     });
   };
 
+  const openLeadershipModalPinned = () => {
+    setIsLeadershipModalPinned(true);
+    setIsLeadershipModalOpen(true);
+  };
+
+  const closeLeadershipModal = () => {
+    setIsLeadershipModalPinned(false);
+    setIsLeadershipModalOpen(false);
+  };
+
+  const openCreativeModal = () => {
+    setIsCreativeModalOpen(true);
+  };
+
+  const closeCreativeModal = () => {
+    setIsCreativeModalOpen(false);
+  };
+
   return (
     <ConfigProvider
       theme={{
         algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
         token: {
-          colorPrimary: '#0f766e',
+          colorPrimary: isDarkMode ? '#34d399' : '#0f766e',
           borderRadius: 8,
-          colorBgLayout: isDarkMode ? '#071114' : '#f8faf9',
-          colorBgContainer: isDarkMode ? '#101b20' : '#ffffff',
-          colorTextBase: isDarkMode ? '#e8f1ee' : '#15221f',
-          fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          colorBgLayout: isDarkMode ? '#07090c' : '#f4f7f4',
+          colorBgContainer: isDarkMode ? '#111613' : '#ffffff',
+          colorTextBase: isDarkMode ? '#f5f7f2' : '#141816',
+          fontFamily: '"Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
         },
       }}
     >
       <Layout className="app-shell min-h-screen">
+        <ImmersiveScene activeSection={activeSection} isDarkMode={isDarkMode} />
         <motion.div className="scroll-progress" style={{ scaleX: progressScale }} />
 
         <motion.div
           initial={false}
-          animate={{ y: isHeaderVisible ? 0 : -78, opacity: isHeaderVisible ? 1 : 0 }}
-          transition={{ duration: 0.22, ease: 'easeOut' }}
+          animate={{ y: isHeaderVisible ? 0 : -76, opacity: isHeaderVisible ? 1 : 0 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
           className="fixed left-0 right-0 top-0 z-50"
         >
           <Header className="site-header">
@@ -419,7 +435,6 @@ const App: React.FC = () => {
                   className={`nav-link ${activeSection === item.key ? 'is-active' : ''}`}
                 >
                   {item.label}
-                  {activeSection === item.key && <motion.span layoutId="active-nav-pill" className="active-nav-pill" />}
                 </button>
               ))}
             </nav>
@@ -468,26 +483,47 @@ const App: React.FC = () => {
 
         <Content>
           <section id="home" className="hero-section section-band">
-            <div className="aurora-layer" aria-hidden="true">
-              <Aurora colorStops={['#0f766e', '#f59e0b', '#2563eb']} blend={0.42} amplitude={0.55} speed={0.58} />
-            </div>
-            <div className="surface-grid" aria-hidden="true" />
+            <div className="hero-pattern" aria-hidden="true" />
+            <motion.div
+              className="hero-backdrop-word"
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
+              aria-hidden="true"
+            >
+              PORTFOLIO
+            </motion.div>
+            <div className="creative-ribbon creative-ribbon-one" aria-hidden="true" />
+            <div className="creative-ribbon creative-ribbon-two" aria-hidden="true" />
+
+            <motion.div
+              className="hero-visual"
+              variants={sectionVariants}
+              initial="hidden"
+              animate="show"
+              aria-label="Hero portrait"
+            >
+              <motion.div variants={itemVariants} className="portrait-card">
+                <img
+                  src={formalImage}
+                  className="portrait-image"
+                  alt="Portrait of Mike Leuster Estrada"
+                  loading="eager"
+                  decoding="async"
+                />
+              </motion.div>
+            </motion.div>
 
             <div className="section-inner hero-grid">
               <motion.div variants={sectionVariants} initial="hidden" animate="show" className="hero-copy">
-                <motion.div variants={itemVariants} className="section-kicker">
-                  <SparklesIcon />
-                  Portfolio 2026
-                </motion.div>
                 <motion.div variants={itemVariants}>
                   <Title className="hero-title">
-                    Useful software. Polished interfaces. Practical engineering.
+                    Mike Leuster Estrada
                   </Title>
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Paragraph className="hero-lede">
-                    I am Mike Leuster Estrada, a Computer Engineering student focused on practical apps,
-                    computer vision, and clear product experiences that people can actually use.
+                    Computer Engineering student in Bohol turning ideas into web apps, computer vision demos, and polished interfaces with a practical edge.
                   </Paragraph>
                 </motion.div>
                 <motion.div variants={itemVariants} className="hero-actions">
@@ -509,77 +545,20 @@ const App: React.FC = () => {
                     Contact Me
                   </Button>
                 </motion.div>
-              </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 28, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.52, delay: 0.16, ease: 'easeOut' }}
-                className="hero-stage"
-              >
-                <motion.aside
-                  className="hero-side-panel hero-side-panel-left"
-                  initial={{ opacity: 0, x: -24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.46, delay: 0.28, ease: 'easeOut' }}
-                >
-                  <div className="panel-icon">
-                    <ZapIcon />
-                  </div>
-                  <span className="dashboard-label">Current Mode</span>
-                  <strong>Building portfolio-ready projects</strong>
-                  <p>Design-minded engineering for apps, vision systems, and useful web experiences.</p>
-                </motion.aside>
-
-                <motion.div
-                  className="portrait-system"
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  <div className="portrait-rings" aria-hidden="true" />
-                  <div className="portrait-shell">
-                    <img src={profileImage} alt="Mike Leuster Estrada" className="portrait-image" />
-                  </div>
-                  <div className="signal-card signal-card-top">
-                    <SparklesIcon />
-                    <span>Open to collaboration</span>
-                  </div>
-                  <div className="signal-card signal-card-bottom">
-                    <Code2Icon />
-                    <span>BS Computer Engineering</span>
-                  </div>
-                  <div className="signal-bars" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                  </div>
+                <motion.div variants={itemVariants} className="social-row hero-social" aria-label="Social links">
+                  {socialLinks.map(link => (
+                    <Button
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={link.label}
+                      className="social-button"
+                      icon={link.icon}
+                    />
+                  ))}
                 </motion.div>
-
-                <motion.aside
-                  className="hero-side-panel hero-side-panel-right"
-                  initial={{ opacity: 0, x: 24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.46, delay: 0.34, ease: 'easeOut' }}
-                >
-                  <div className="highlight-list">
-                    {heroHighlights.map(item => (
-                      <div key={item.label} className="highlight-row">
-                        <span>{item.label}</span>
-                        <strong>{item.value}</strong>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="toolbox-block">
-                    <span className="dashboard-label">Toolbox</span>
-                    <div className="hero-stack">
-                      {heroStack.map(tool => (
-                        <span key={tool}>{tool}</span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.aside>
               </motion.div>
 
               <motion.div
@@ -597,6 +576,7 @@ const App: React.FC = () => {
                 ))}
               </motion.div>
             </div>
+
           </section>
 
           <motion.section
@@ -610,25 +590,16 @@ const App: React.FC = () => {
             <div className="section-inner">
               <Row gutter={[40, 40]} align="middle">
                 <Col xs={24} lg={10}>
-                  <motion.div variants={itemVariants} className="image-feature">
+                  <motion.figure variants={itemVariants} className="image-feature">
                     <img src={formalImage} alt="Formal portrait of Mike Leuster Estrada" />
-                    <div className="image-feature-caption">
-                      <span>Bohol Island State University</span>
-                      <strong>Student Developer</strong>
-                    </div>
-                  </motion.div>
+                  </motion.figure>
                 </Col>
                 <Col xs={24} lg={14}>
                   <motion.div variants={itemVariants} className="section-heading">
-                    <div className="section-kicker">
-                      <UserIcon />
-                      About
-                    </div>
+                    <div className="section-kicker">About</div>
                     <Title level={2}>A builder who cares about the full experience.</Title>
                     <Paragraph>
-                      My work sits between engineering, presentation, and service. I enjoy turning complex
-                      ideas into usable systems, whether that means a machine learning demo, a management
-                      platform, or a portfolio that communicates clearly.
+                      My work sits between engineering, presentation, and service. I enjoy turning complex ideas into usable systems, whether that means a machine learning demo, a management platform, or a portfolio that communicates clearly.
                     </Paragraph>
                   </motion.div>
 
@@ -656,52 +627,167 @@ const App: React.FC = () => {
           >
             <div className="section-inner">
               <motion.div variants={itemVariants} className="section-heading centered">
-                <div className="section-kicker">
-                  <Code2Icon />
-                  Capabilities
-                </div>
+                <div className="section-kicker">Capabilities</div>
                 <Title level={2}>Balanced technical and people skills.</Title>
                 <Paragraph>
                   A focused stack for student engineering projects, supported by communication and creative production.
                 </Paragraph>
               </motion.div>
 
-              <Row gutter={[20, 20]} className="skill-grid">
+              <Row gutter={[18, 18]} className="skill-grid">
                 {skillGroups.map(group => (
                   <Col xs={24} md={8} key={group.title}>
-                    <motion.article variants={itemVariants} whileHover={{ y: -6 }} className={`skill-card tone-${group.tone}`}>
+                    {(() => {
+                      const isLeadership = group.title === 'Leadership & People';
+                      const isCreative = group.title === 'Creative Production';
+                      const illustrationToneClass =
+                        group.title === 'Software & Systems'
+                          ? 'tone-systems'
+                          : group.title === 'Creative Production'
+                            ? 'tone-creative'
+                            : 'tone-leadership';
+
+                      return (
+                    <motion.article
+                      variants={itemVariants}
+                      whileHover={{ y: -4 }}
+                      className={`skill-card ${isLeadership ? 'is-clickable' : ''}`}
+                      onClick={isLeadership ? openLeadershipModalPinned : undefined}
+                    >
                       <div className="card-heading">
                         <div className="card-icon">{group.icon}</div>
-                        <div>
+                        <div className="skill-copy">
                           <h3>{group.title}</h3>
                           <p>{group.summary}</p>
                         </div>
                       </div>
+
+                      {isLeadership || isCreative ? (
+                        <button
+                          type="button"
+                          className={`skill-illustration ${illustrationToneClass} is-pdf`}
+                          aria-label={isLeadership ? 'Preview Leadership PDF' : 'Preview Creative PDF'}
+                          onClick={event => {
+                            event.stopPropagation();
+                            if (isLeadership) {
+                              openLeadershipModalPinned();
+                            } else {
+                              openCreativeModal();
+                            }
+                          }}
+                        >
+                          <iframe
+                            src={isLeadership ? LEADERSHIP_PDF_EMBED_URL : CREATIVE_PDF_EMBED_URL}
+                            title={isLeadership ? 'Leadership PDF preview' : 'Creative PDF preview'}
+                            loading="lazy"
+                            referrerPolicy="no-referrer"
+                            allow="autoplay"
+                          />
+                        </button>
+                      ) : (
+                        <div
+                          className={`skill-illustration ${illustrationToneClass}`}
+                          aria-hidden="true"
+                        />
+                      )}
                       <div className="skill-meter" aria-label={`${group.title} strength`}>
                         <motion.span
                           initial={{ width: 0 }}
                           whileInView={{ width: `${group.level}%` }}
                           viewport={{ once: true }}
-                          transition={{ duration: 0.8, ease: 'easeOut' }}
+                          transition={{ duration: 0.7, ease: 'easeOut' }}
                         />
                       </div>
                       <div className="tag-cloud">
                         {group.skills.map(skill => (
-                          <Tag key={skill}>{skill}</Tag>
+                          <Tag
+                            key={skill}
+                            className={isLeadership && skill === 'Leadership' ? 'tag-interactive' : undefined}
+                            onClick={
+                              isLeadership
+                                ? event => {
+                                    event.stopPropagation();
+                                    if (skill === 'Leadership') {
+                                      openLeadershipModalPinned();
+                                    }
+                                  }
+                                : undefined
+                            }
+                          >
+                            {skill}
+                          </Tag>
                         ))}
                       </div>
                     </motion.article>
+                      );
+                    })()}
                   </Col>
                 ))}
               </Row>
 
-              <motion.div variants={itemVariants} className="marquee-panel" aria-label="Technology highlights">
-                <div className="marquee-track">
-                  {[...skillGroups.flatMap(group => group.skills), ...skillGroups.flatMap(group => group.skills)].map((skill, index) => (
-                    <span key={`${skill}-${index}`}>{skill}</span>
-                  ))}
+              <Modal
+                title="Leadership"
+                open={isLeadershipModalOpen}
+                onCancel={closeLeadershipModal}
+                footer={null}
+                width={960}
+                centered
+              >
+                <div className="pdf-modal">
+                  <div className="pdf-modal-actions">
+                    <Button
+                      href={LEADERSHIP_PDF_VIEW_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      icon={<ArrowUpRightIcon />}
+                      className="secondary-action"
+                    >
+                      Open PDF
+                    </Button>
+                  </div>
+                  <div className="pdf-modal-embed" role="region" aria-label="Embedded PDF">
+                    <iframe
+                      src={LEADERSHIP_PDF_EMBED_URL}
+                      title="Leadership PDF"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      allow="autoplay"
+                    />
+                  </div>
                 </div>
-              </motion.div>
+              </Modal>
+
+              <Modal
+                title="Creative Production"
+                open={isCreativeModalOpen}
+                onCancel={closeCreativeModal}
+                footer={null}
+                width={960}
+                centered
+              >
+                <div className="pdf-modal">
+                  <div className="pdf-modal-actions">
+                    <Button
+                      href={CREATIVE_PDF_VIEW_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      icon={<ArrowUpRightIcon />}
+                      className="secondary-action"
+                    >
+                      Open PDF
+                    </Button>
+                  </div>
+                  <div className="pdf-modal-embed" role="region" aria-label="Embedded PDF">
+                    <iframe
+                      src={CREATIVE_PDF_EMBED_URL}
+                      title="Creative Production PDF"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      allow="autoplay"
+                    />
+                  </div>
+                </div>
+              </Modal>
             </div>
           </motion.section>
 
@@ -715,62 +801,33 @@ const App: React.FC = () => {
           >
             <div className="section-inner">
               <motion.div variants={itemVariants} className="section-heading centered">
-                <div className="section-kicker">
-                  <FolderKanbanIcon />
-                  Selected Work
-                </div>
+                <div className="section-kicker">Selected Work</div>
                 <Title level={2}>Projects with practical outcomes.</Title>
                 <Paragraph>
                   Each project is framed around a clear use case, a focused stack, and a user-facing result.
                 </Paragraph>
               </motion.div>
 
-              <Row gutter={[20, 20]}>
-                {projects.map((project, index) => (
+              <Row gutter={[18, 18]}>
+                {projects.map(project => (
                   <Col xs={24} lg={8} key={project.title}>
-                    <motion.article
-                      variants={itemVariants}
-                      whileHover={{ y: -8 }}
-                      className={`project-card tone-${project.tone}`}
-                    >
-                      <div className="project-preview" aria-hidden="true">
-                        <div className="preview-toolbar">
-                          <span />
-                          <span />
-                          <span />
-                        </div>
-                        <div className="preview-content">
-                          <motion.div
-                            className="preview-icon"
-                            animate={{ rotate: [0, 4, -4, 0], scale: [1, 1.04, 1] }}
-                            transition={{ duration: 4 + index, repeat: Infinity, ease: 'easeInOut' }}
-                          >
-                            {project.icon}
-                          </motion.div>
-                          <div className="preview-lines">
-                            <span />
-                            <span />
-                            <span />
-                          </div>
-                        </div>
+                    <motion.article variants={itemVariants} whileHover={{ y: -4 }} className="project-card">
+                      <ProjectPreview icon={project.icon} label={project.imageLabel} />
+                      <span className="project-category">{project.category}</span>
+                      <h3>{project.title}</h3>
+                      <p>{project.desc}</p>
+                      <div className="metric-list">
+                        {project.metrics.map(metric => (
+                          <span key={metric}>
+                            <CheckCircle2Icon />
+                            {metric}
+                          </span>
+                        ))}
                       </div>
-                      <div className="project-content">
-                        <span className="project-category">{project.category}</span>
-                        <h3>{project.title}</h3>
-                        <p>{project.desc}</p>
-                        <div className="metric-list">
-                          {project.metrics.map(metric => (
-                            <span key={metric}>
-                              <CheckCircle2Icon />
-                              {metric}
-                            </span>
-                          ))}
-                        </div>
-                        <div className="tag-cloud">
-                          {project.tags.map(tag => (
-                            <Tag key={tag}>{tag}</Tag>
-                          ))}
-                        </div>
+                      <div className="tag-cloud">
+                        {project.tags.map(tag => (
+                          <Tag key={tag}>{tag}</Tag>
+                        ))}
                       </div>
                     </motion.article>
                   </Col>
@@ -791,17 +848,14 @@ const App: React.FC = () => {
               <Row gutter={[36, 36]}>
                 <Col xs={24} lg={12}>
                   <motion.div variants={itemVariants} className="section-heading">
-                    <div className="section-kicker">
-                      <BriefcaseIcon />
-                      Experience
-                    </div>
+                    <div className="section-kicker">Experience</div>
                     <Title level={2}>Leadership shaped by real responsibilities.</Title>
                   </motion.div>
 
                   <motion.div variants={itemVariants} className="timeline-panel">
                     <Timeline
                       items={experienceItems.map(item => ({
-                        color: 'green',
+                        color: 'blue',
                         children: (
                           <div className="timeline-item">
                             <h3>{item.title}</h3>
@@ -865,14 +919,10 @@ const App: React.FC = () => {
               <Row gutter={[36, 36]} align="stretch">
                 <Col xs={24} lg={10}>
                   <motion.div variants={itemVariants} className="contact-aside">
-                    <div className="section-kicker">
-                      <MailIcon />
-                      Contact
-                    </div>
+                    <div className="section-kicker">Contact</div>
                     <Title level={2}>Let us build something clear and useful.</Title>
                     <Paragraph>
-                      Reach out for collaboration, school projects, developer communities, or opportunities where
-                      practical engineering and careful presentation matter.
+                      Reach out for collaboration, school projects, developer communities, or opportunities where practical engineering and careful presentation matter.
                     </Paragraph>
 
                     <div className="contact-list">
@@ -980,7 +1030,6 @@ const App: React.FC = () => {
               Back to top
             </Button>
           </div>
-          <Divider />
           <div className="footer-credit">
             &copy; {new Date().getFullYear()} Mike Leuster Estrada. All rights reserved.
           </div>
@@ -998,6 +1047,36 @@ const ChevronIndicator = ({ active }: ChevronIndicatorProps) => (
   <span className={`mobile-indicator ${active ? 'is-active' : ''}`} aria-hidden="true">
     <ArrowUpRightIcon />
   </span>
+);
+
+type ProjectPreviewProps = {
+  icon: ReactNode;
+  label: string;
+};
+
+const ProjectPreview = ({ icon, label }: ProjectPreviewProps) => (
+  <motion.div whileHover="hover" initial="rest" animate="rest" className="project-preview">
+    <motion.div
+      variants={{
+        rest: { scale: 1, rotate: 0 },
+        hover: { scale: 1.06, rotate: -2 },
+      }}
+      transition={{ type: 'spring', stiffness: 280, damping: 20 }}
+      className="project-preview-icon"
+      aria-hidden="true"
+    >
+      {icon}
+    </motion.div>
+    <div className="project-preview-copy">
+      <span>{label}</span>
+      <strong>Project Preview</strong>
+    </div>
+    <div className="preview-lines" aria-hidden="true">
+      <span />
+      <span />
+      <span />
+    </div>
+  </motion.div>
 );
 
 export default App;

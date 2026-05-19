@@ -1,0 +1,183 @@
+{
+   "checksum": "eb4f0fc604c08c685a46dd103fc3479a",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13423602652799801",
+            "date_last_used": "0",
+            "guid": "b369496e-6901-46c3-bce8-8ef561645eab",
+            "id": "9",
+            "name": "Lenovo Support",
+            "show_icon": false,
+            "source": "oem_preload",
+            "type": "url",
+            "url": "https://support.lenovo.com/",
+            "visit_count": 0
+         }, {
+            "date_added": "13423602652798744",
+            "date_last_used": "0",
+            "guid": "140f80d5-b80d-4e36-9bee-a7eaaf8d78a7",
+            "id": "8",
+            "name": "Lenovo",
+            "show_icon": false,
+            "source": "oem_preload",
+            "type": "url",
+            "url": "https://www.lenovo.com/",
+            "visit_count": 0
+         }, {
+            "date_added": "13423602652796966",
+            "date_last_used": "0",
+            "guid": "9d542cac-2942-47a0-b2e1-bd2f82135455",
+            "id": "7",
+            "name": "McAfee",
+            "show_icon": false,
+            "source": "oem_preload",
+            "type": "url",
+            "url": "https://www.mcafee.com/consumer/v/browserfav/lenovo.html",
+            "visit_count": 0
+         } ],
+         "date_added": "13423602652402846",
+         "date_last_used": "0",
+         "date_modified": "13423602652799801",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Favorites bar",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13423602652402846",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Other favorites",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [ {
+            "date_added": "13266463951098521",
+            "date_last_used": "0",
+            "guid": "4a40c627-1498-4bba-9078-302cd2345ec7",
+            "id": "10",
+            "name": "How Has COVID-19 Changed Education? | EU Business School",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://www.euruni.edu/blog/covid-19-changed-education/",
+            "visit_count": 0
+         }, {
+            "date_added": "13266463997863024",
+            "date_last_used": "0",
+            "guid": "6a773179-7eef-4d7f-953a-563023f31770",
+            "id": "11",
+            "name": "Identifying and Addressing the Mental Health Needs of Online Students in Higher Education",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://www.westga.edu/~distance/ojdla/summer172/barr172.html",
+            "visit_count": 0
+         }, {
+            "date_added": "13266464006492328",
+            "date_last_used": "0",
+            "guid": "391aed67-ad48-4cfe-8f5d-a688ccb87d35",
+            "id": "12",
+            "name": "findings of students mental health in distance learning - Google Scholar",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=findings+of+students+mental+health+in+distance+learning&btnG=",
+            "visit_count": 0
+         }, {
+            "date_added": "13266464014979811",
+            "date_last_used": "0",
+            "guid": "af0106dc-211d-470c-b175-0d23d0ee2ab2",
+            "id": "13",
+            "name": "Television violence Essay - Google Search",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://www.google.com/search?client=ms-android-vivo&sxsrf=ALeKk00zPmn-s2LSLgGkvevmNEElsjWeSw:1620953966276&q=Television+violence+Essay&sa=X&ved=2ahUKEwimnO2K_MfwAhWUOZQKHQFAChAQ1QIwD3oECAsQAQ&cshid=1620955573803&biw=360&bih=646&dpr=2",
+            "visit_count": 0
+         }, {
+            "date_added": "13266464024039273",
+            "date_last_used": "0",
+            "guid": "e449ebad-308c-4735-98ab-760b9ddbcb69",
+            "id": "14",
+            "name": "Mental Health and Distance Learning | LearnSafe",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://learnsafe.com/mental-health-and-distance-learning/",
+            "visit_count": 0
+         }, {
+            "date_added": "13266464032223271",
+            "date_last_used": "0",
+            "guid": "3eb8b645-8306-472c-811d-43d038fefeb2",
+            "id": "15",
+            "name": "international.thenewslens.com",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://www.google.com/amp/s/international.thenewslens.com/amparticle/142537",
+            "visit_count": 0
+         }, {
+            "date_added": "13266464046553060",
+            "date_last_used": "0",
+            "guid": "0335ce92-97e7-4567-b63a-d3041db4ea40",
+            "id": "16",
+            "name": "Flaws aside, online learning takes toll on students’ mental health | Inquirer News",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://www.google.com/amp/s/newsinfo.inquirer.net/1417703/flaws-aside-online-learning-takes-toll-on-students-mental-health/amp",
+            "visit_count": 0
+         }, {
+            "date_added": "13266599694546792",
+            "date_last_used": "0",
+            "guid": "766f2205-c0b8-460c-8311-6d453b73f00e",
+            "id": "17",
+            "name": "Beyond lockdown: Can the Philippines sustain low air-pollution levels? | Earth Journalism Network",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://earthjournalism.net/stories/beyond-lockdown-can-the-philippines-sustain-low-air-pollution-levels#:~:text=Air%20pollution%20has%20long%20been%20a%20problem%20for%20the%20Philippines.&text=Before%20the%20lockdown%2C%20the%20Philippines,14.6%20%CE%BCg%2Fm3%20in%202018.",
+            "visit_count": 0
+         }, {
+            "date_added": "13318861152878332",
+            "date_last_used": "0",
+            "guid": "e8c54926-451d-4460-838e-b0117c299faf",
+            "id": "18",
+            "name": "classroom.google.com",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://classroom.google.com/u/0/c/NTQ1NjMxNTI4Mjgw/m/NTEyNDMxMDg1Mzc2/details",
+            "visit_count": 0
+         } ],
+         "date_added": "13423602652402846",
+         "date_last_used": "0",
+         "date_modified": "13318861152878332",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Mobile favorites",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "workspaces_v2": {
+         "children": [  ],
+         "date_added": "13423602652402846",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "75aa6670-344f-549d-b742-660f029506ab",
+         "id": "5",
+         "name": "Workspaces",
+         "source": "unknown",
+         "type": "folder"
+      }
+   },
+   "sync_metadata": "CjEKDgiIgQISCJE9+UiaAQAAEgAqGDB6WlNwbm9WS1VCbks3Y2dyUFR1c1E9PUgDoAYHEq0BCBESqAEKHGtSYlp2N3ZpTHdWeXduTTNIbUllRlhaZnZVVT0SJDc2NmYyMjA1LWMwYjgtNDYwYy04MzExLTZkNDUzYjczZjAwZRgAIAAoADCHre/J8DA48a7vyfAwQPGu78nwMEocOUVGRHN2dUpSN0tPUmFLWG1Md2ZmUEFqVkFvPVofIh3+cXhJbWtTc210OU9JcDRLL2YvamFvZ2lLK3BNPWUAAAAAwj4CYAUSrQEICxKoAQocSGo4SWhIY1hPaTFPdHQrVDBiRGVSQmpXVFpnPRIkNmE3NzMxNzktN2VlZi00ZDdmLTk1M2EtNTYzMDIzZjMxNzcwGAAgACgAMISt78nwMDiUru/J8DBAlK7vyfAwShwwTWlPdzlTV1JkL29NNVpoc1JJNVl3ZFVVdWs9Wh8iHbNVcTdVK1JhYXN4eXI0YUV6SnZDL1dnZ2Vnc2M9ZQAAAADCPgJgBRKtAQgMEqgBChxQR2JVSUlLVklHdEVjemQzcS9aMHV3Tk4vRXc9EiQzOTFhZWQ2Ny1hZDQ4LTRjZmUtOGY1ZC1hNjg4Y2NiODdkMzUYACAAKAAwi63vyfAwON+v78nwMEDfr+/J8DBKHHYxSjFnOXhMLzR3SXZ6cGsvRG1aWFR6NkJTdz1aHyId2SsyaDhDL1EzUnlYSGtFcEwreUpZb3IxOURvbz1lAAAAAMI+AmAFEq0BCBASqAEKHHUyb1hSWXBIY0dCMjM4c2J2SHJHTlNxWVhEVT0SJDAzMzVjZTkyLTk3ZTctNDU2Ny1iNjNhLWQzMDQxZGI0ZWE0MBgAIAAoADCGre/J8DA40q7vyfAwQNKu78nwMEocMms2UlhvanMxanFwem9lMXkvcWE5ZUZ5aUhjPVofIh39bWhnMEZkdUNLd1V0ZGdGb1JmeVh6bDluVURnPWUAAAAAwj4CYAUSrQEIDhKoAQocWFFxN2Z0R1RkbjJheHJCdVhiWjY5ZVYrUzJBPRIkZTQ0OWViYWQtMzA4Yy00NzM1LTk4YWItNzYwYjlkZGJjYjY5GAAgACgAMIit78nwMDiRr+/J8DBAka/vyfAwShxtb3dkbTh2Tkg1RHdlZ3RZV3VQc1VrckVyU289Wh8iHfZtWldZdUd4Q1VBbENKZStLbjJTMGU3SE1VM2M9ZQAAAADCPgJgBRKtAQgSEqgBChxjbGt1UjdPdk13ajFqR2JRUWdqajhGQ3IxdXc9EiRlOGM1NDkyNi00NTFkLTQ0NjAtODM4ZS1iMDExN2MyOTlmYWYYACAAKAAwha3vyfAwOLOu78nwMECzru/J8DBKHGxyWlVVQmRLaUo1RW5KdnlNaW1VNkZSUkZSdz1aHyId/00zaDMvcldtNmIxelFXSmlEdHQxajlnOVRvcz1lAAAAAMI+AmAFEq0BCA8SqAEKHFQrTWo5YVlCUHdZdlJlV3JyU1VIbnlHQTZGOD0SJDNlYjhiNjQ1LTgzMDYtNDcyYy04MTFkLTQzZDAzOGZlZmViMhgAIAAoADCKre/J8DA4wK/vyfAwQMCv78nwMEocaFRmbHl6VWp6Y0xPb1FoZnNON1JPV1Z1b3VrPVofIh37eHZEbEtoamhkdVJiZmYzRW42OUZETU9tOEVjPWUAAAAAwj4CYAUSjgEIAxKJAQocbmpnRHU4OGVDcnZYcDg2cEQ3ZkhHY3FGcDg4PRIkNDUyZTY5OWYtYzA1Ni01YWRhLWExODItM2FmOWY4YjU3NzdiGAAgACgAMOLDzaLDMDjXyM2iwzBA18jNosMwShx5ek5CMDFjbjU0QTdjUlUwdVQrL1BnbVR0VW89WgBlAAAAAMI+AmAAEq0BCA0SqAEKHDlnKzZKbGlwYUZsdnJmZENtWlJ4SituelR5az0SJGFmMDEwNmRjLTIxMWQtNDcwYy1iMTc1LTBkMjNkMGVlMmFiMhgAIAAoADCJre/J8DA4oK/vyfAwQKCv78nwMEocdDZHdkFLTi9qQUxZL3pEUmxEUXlRYzJUNkIwPVofIh3sUFhyRmF5MklJOFozV3R0ZDJKZ2V6T0s4RTdBPWUAAAAAwj4CYAUSjgEIBRKJAQocd1JCclpMKzZQQTlhdktnak5QN0pYRExjZnZzPRIkZWVmNjk5MjgtMTljZS01YjA1LWIwNDctOWQ5MmVhNGRkNmQyGAAgACgAMJD75MekMziB/OTHpDNAgfzkx6QzShxubXg2NXNRRHZ4SThUZ0VlditBK250dG9TbjQ9WgBlAAAAAMI+AmAAEqwBCAoSpwEKHHRTTjBxN0grbWxFUnQ5R2hER01yNmVJMUh4Yz0SJDRhNDBjNjI3LTE0OTgtNGJiYS05MDc4LTMwMmNkMjM0NWVjNxgAIAAoADCMre/J8DA4/q/vyfAwQP6v78nwMEocaWJpZ0hXL0ZvV1VicUsxcVZyWFU4WVpRY2xNPVoeIhxmS1Bjc3hWaDM0d3V3WmFZeHFONCtxTFNDM009ZQAAAADCPgJgBRKOAQgCEokBChxZY1NUb252RVNQd3FDczRMMmNyVmh2NjhMOTg9EiQ3Njg4ZTdlMS04NGMwLTUzMDktYWM2Ny02ZTUwOTAwY2ExNTIYACAAKAAw4sPNosMwOMvHzaLDMEDLx82iwzBKHG9QVmtod0JSYlY2NUtDV1IyK0lPTkhXb091OD1aAGUAAAAAwj4CYAASjgEIARKJAQoceXhKLzZmdmtlY3I3a3A1RVF6QjR0V0xwZGJFPRIkNTg1OGY0NzAtZjZiMy01YzBlLWI5MzAtMTFjZjg3Yjk1MjNjGAAgACgAMOLDzaLDMDisx82iwzBArMfNosMwShxhUkNXTGdoRjliNUlucUtJRHZ1Si9qdlFrRmM9WgBlAAAAAMI+AmAAMAA4AA==",
+   "version": 1
+}

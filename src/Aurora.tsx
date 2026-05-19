@@ -128,11 +128,30 @@ export default function Aurora(props: AuroraProps) {
     const ctn = ctnDom.current;
     if (!ctn) return;
 
-    const renderer = new Renderer({
-      alpha: true,
-      premultipliedAlpha: true,
-      antialias: true,
-    });
+    // Cap DPR to avoid allocating huge framebuffers on high-DPI displays.
+    // This is especially important inside Electron-based browsers where GPU memory can be tighter.
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+
+    let renderer: Renderer;
+    try {
+      // Keep the WebGL context as lightweight as possible.
+      // Antialiasing and extra buffers can cause context creation to fail on some systems
+      // (or in embedded/electron browsers) and can increase memory pressure.
+      renderer = new Renderer({
+        alpha: true,
+        premultipliedAlpha: true,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        dpr,
+        powerPreference: 'low-power',
+      });
+    } catch (err) {
+      // If WebGL isn't available (or can't be created), fail gracefully.
+      // The rest of the app should still load.
+      console.warn('[Aurora] WebGL renderer creation failed; disabling Aurora.', err);
+      return;
+    }
 
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -140,16 +159,47 @@ export default function Aurora(props: AuroraProps) {
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     gl.canvas.style.backgroundColor = 'transparent';
 
-    let program: Program;
+    let program: Program | undefined;
+
+    const resolutionUniform: [number, number] = [ctn.offsetWidth, ctn.offsetHeight];
+    const colorStopsUniform: [number, number, number][] = [
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0],
+    ];
+    let lastColorStopsKey = '';
+
+    const normalizeStops = (stops: AuroraProps['colorStops']): string[] => {
+      const list = Array.isArray(stops) ? stops : [];
+      if (list.length >= 3) return [list[0]!, list[1]!, list[2]!];
+      const fallback = ['#5227FF', '#7cff67', '#5227FF'];
+      return [list[0] ?? fallback[0], list[1] ?? fallback[1], list[2] ?? fallback[2]];
+    };
+
+    const applyColorStops = (stops: AuroraProps['colorStops']) => {
+      const normalized = normalizeStops(stops);
+      const key = normalized.join('|');
+      if (key === lastColorStopsKey) return;
+      lastColorStopsKey = key;
+      for (let i = 0; i < 3; i++) {
+        const c = new Color(normalized[i]!);
+        colorStopsUniform[i]![0] = c.r;
+        colorStopsUniform[i]![1] = c.g;
+        colorStopsUniform[i]![2] = c.b;
+      }
+      if (program) {
+        program.uniforms.uColorStops.value = colorStopsUniform;
+      }
+    };
 
     function resize() {
       if (!ctn) return;
       const width = ctn.offsetWidth;
       const height = ctn.offsetHeight;
       renderer.setSize(width, height);
-      if (program) {
-        program.uniforms.uResolution.value = [width, height];
-      }
+      resolutionUniform[0] = width;
+      resolutionUniform[1] = height;
+      if (program) program.uniforms.uResolution.value = resolutionUniform;
     }
 
     window.addEventListener('resize', resize);
@@ -159,10 +209,7 @@ export default function Aurora(props: AuroraProps) {
       delete geometry.attributes.uv;
     }
 
-    const colorStopsArray = colorStops.map(hex => {
-      const c = new Color(hex);
-      return [c.r, c.g, c.b];
-    });
+    applyColorStops(colorStops);
 
     program = new Program(gl, {
       vertex: VERT,
@@ -170,8 +217,8 @@ export default function Aurora(props: AuroraProps) {
       uniforms: {
         uTime: { value: 0 },
         uAmplitude: { value: amplitude },
-        uColorStops: { value: colorStopsArray },
-        uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
+        uColorStops: { value: colorStopsUniform },
+        uResolution: { value: resolutionUniform },
         uBlend: { value: blend },
       },
     });
@@ -182,15 +229,14 @@ export default function Aurora(props: AuroraProps) {
     let animateId = 0;
     const update = (t: number) => {
       animateId = requestAnimationFrame(update);
-      const { time = t * 0.01, speed = 1.0 } = propsRef.current;
+      if (!program) return;
+      const current = propsRef.current;
+      const time = current.time ?? t * 0.01;
+      const speed = current.speed ?? 1.0;
       program.uniforms.uTime.value = time * speed * 0.1;
-      program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0;
-      program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
-      const stops = propsRef.current.colorStops ?? colorStops;
-      program.uniforms.uColorStops.value = stops.map(hex => {
-        const c = new Color(hex);
-        return [c.r, c.g, c.b];
-      });
+      program.uniforms.uAmplitude.value = current.amplitude ?? 1.0;
+      program.uniforms.uBlend.value = current.blend ?? 0.5;
+      applyColorStops(current.colorStops ?? colorStops);
       renderer.render({ scene: mesh });
     };
 
@@ -205,7 +251,7 @@ export default function Aurora(props: AuroraProps) {
       }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-  }, [amplitude, blend, colorStops]);
+  }, []);
 
   return <div ref={ctnDom} className="aurora-container" />;
 }

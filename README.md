@@ -2,7 +2,7 @@
 
 A fast, responsive personal portfolio website built with **React + TypeScript + Vite**.
 
-This site is my personal home on the web — it introduces who I am, highlights the projects I’ve built, and makes it easy for someone to contact me or explore my work. The layout is intended to be clean and quick to navigate, with a focus on readability and smooth performance.
+This site is my personal home on the web — it introduces who I am, highlights the projects I’ve built, and makes it easy for someone to contact me or explore my work. The layout is intended to be clean and quick to navigate, with a focus on readaility and smooth performance.
 
 What you’ll typically find on the site:
 - A landing/hero section with a short introduction

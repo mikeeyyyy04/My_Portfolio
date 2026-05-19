@@ -1,0 +1,5 @@
+2026/05/19-02:30:56.782 43c0 Creating DB C:\Users\mike leuster\Desktop\MY PROJECTS\PORTFOLIO_WEBSITE\My_FinalPortfolio\My_Portfolio\visual-checks\edge-profile\Default\EdgeCoupons/coupons_data.db since it was missing.
+2026/05/19-02:30:56.818 43c0 Reusing MANIFEST C:\Users\mike leuster\Desktop\MY PROJECTS\PORTFOLIO_WEBSITE\My_FinalPortfolio\My_Portfolio\visual-checks\edge-profile\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2026/05/19-02:31:03.571 27cc Level-0 table #5: started
+2026/05/19-02:31:03.579 27cc Level-0 table #5: 682468 bytes OK
+2026/05/19-02:31:03.583 27cc Delete type=0 #3
