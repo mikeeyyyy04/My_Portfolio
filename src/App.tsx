@@ -32,7 +32,6 @@ import {
   MapPin as MapPinIcon,
   Menu as MenuIcon,
   Moon as MoonIcon,
-  Phone as PhoneIcon,
   Send as SendIcon,
   Sun as SunIcon,
   Terminal as TerminalIcon,
@@ -74,6 +73,9 @@ type Project = {
   category: string;
   desc: string;
   imageLabel: string;
+  previewImageUrl?: string;
+  previewEmbedUrl?: string;
+  previewViewUrl?: string;
   tags: string[];
   metrics: string[];
   icon: ReactNode;
@@ -91,7 +93,7 @@ const navItems = [
 ];
 
 const heroStats = [
-  { value: '3+', label: 'Featured builds' },
+  { value: '4+', label: 'Featured builds' },
   { value: '2022', label: 'CpE journey' },
   { value: '5+', label: 'Leadership roles' },
 ];
@@ -126,14 +128,14 @@ const skillGroups: SkillGroup[] = [
     title: 'Software & Systems',
     icon: <Code2Icon />,
     summary: 'Foundations for building, debugging, and shipping technical projects.',
-    skills: ['C', 'Assembly', 'Python', 'OpenCV', 'React', 'TypeScript'],
+    skills: ['C/C++', 'Python', 'Dart', 'OpenCV', 'FastAPI', 'PostgreSQL', 'React', 'TypeScript'],
     level: 82,
   },
   {
     title: 'Creative Production',
     icon: <FolderKanbanIcon />,
     summary: 'Useful for making projects easier to understand and present.',
-    skills: ['Video Editing', 'Adobe Tools', 'Microsoft Office', 'Documentation'],
+    skills: ['Documentation', 'Presentation Design', 'Microsoft Office', 'Video Editing'],
     level: 76,
   },
   {
@@ -166,8 +168,11 @@ const projects: Project[] = [
   {
     title: 'Appointify',
     category: 'Full-Stack System',
-    desc: 'A clinic appointment management system with authentication, data persistence, and a focused scheduling workflow.',
+    desc: 'A clinic appointment management system built with a Bun/Hono backend and a SvelteKit frontend, featuring clinic search, serving number management, and availability controls.',
     imageLabel: 'Scheduling Dashboard',
+    previewImageUrl: 'https://drive.google.com/thumbnail?id=1G4i-InpTCD_SaTcU5nNFCYmAUsSUBdQi&sz=w1200',
+    previewViewUrl: 'https://drive.google.com/file/d/1G4i-InpTCD_SaTcU5nNFCYmAUsSUBdQi/view?usp=sharing',
+    previewEmbedUrl: 'https://drive.google.com/file/d/1G4i-InpTCD_SaTcU5nNFCYmAUsSUBdQi/preview',
     tags: ['Bun', 'Hono', 'SvelteKit', 'MongoDB'],
     metrics: ['JWT auth', 'Admin flows', 'Scheduling'],
     icon: <CalendarDaysIcon />,
@@ -175,15 +180,31 @@ const projects: Project[] = [
   {
     title: 'Personal Portfolio',
     category: 'Web Presence',
-    desc: 'A portfolio experience built around responsive layouts, smooth motion, and clean presentation of technical work.',
+    desc: 'A Flutter web portfolio with responsive layouts, project cards + modals, resume/PDF viewing, and automated GitHub Pages deployment via GitHub Actions.',
     imageLabel: 'Responsive Portfolio',
     tags: ['Flutter', 'Dart', 'GitHub Pages'],
     metrics: ['Responsive UI', 'Project dialogs', 'Deployment'],
     icon: <GlobeIcon />,
   },
+  {
+    title: 'JeepGuide',
+    category: 'Mobile App',
+    desc: 'A Flutter app for checking jeepney schedules, estimating fares, and exploring routes on a map—focused on the Sikatuna to Tagbilaran City route.',
+    imageLabel: 'Route Planner',
+    previewImageUrl: '/jeepguide-ui.png',
+    tags: ['Flutter', 'Dart', 'Maps'],
+    metrics: ['Schedule browser', 'Fare calculator', 'Location-aware map'],
+    icon: <MapPinIcon />,
+  },
 ];
 
 const experienceItems = [
+  {
+    title: 'Belchez IT Solutions',
+    role: 'Embedded Systems Engineering Intern',
+    date: 'Feb 2026 - Mar 2026',
+    desc: 'Built RS485/Modbus RTU backend services, FastAPI endpoints, PostgreSQL schemas, and React/Vite monitoring interfaces while supporting SCADA testing and UI improvements.',
+  },
   {
     title: 'Institute of Computer Engineering',
     role: 'Year Level Representative',
@@ -214,7 +235,14 @@ const educationItems = [
   'Sikatuna Central Elementary School, 2009 - 2015',
   'Sikatuna National High School, 2015 - 2020',
   'Sikatuna National High School GAS, 2020 - 2022',
-  'BS Computer Engineering at BISU, 2022 - present',
+  'BS Computer Engineering at Bohol Island State University, 2022 - Present',
+];
+
+const interestItems = [
+  'Programming',
+  'Mobile App Development',
+  'Web Development',
+  'Embedded Systems',
 ];
 
 const sectionVariants = {
@@ -253,6 +281,7 @@ const App: React.FC = () => {
   const [isLeadershipModalOpen, setIsLeadershipModalOpen] = useState(false);
   const [isLeadershipModalPinned, setIsLeadershipModalPinned] = useState(false);
   const [isCreativeModalOpen, setIsCreativeModalOpen] = useState(false);
+  const [activeProjectPreview, setActiveProjectPreview] = useState<Project | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem('themeMode');
     if (savedTheme === 'dark' || savedTheme === 'light') {
@@ -391,6 +420,15 @@ const App: React.FC = () => {
 
   const closeCreativeModal = () => {
     setIsCreativeModalOpen(false);
+  };
+
+  const openProjectPreview = (project: Project) => {
+    if (!project.previewImageUrl && !project.previewEmbedUrl) return;
+    setActiveProjectPreview(project);
+  };
+
+  const closeProjectPreview = () => {
+    setActiveProjectPreview(null);
   };
 
   return (
@@ -788,6 +826,57 @@ const App: React.FC = () => {
                   </div>
                 </div>
               </Modal>
+
+              <Modal
+                title={activeProjectPreview ? `${activeProjectPreview.title} — Preview` : 'Project Preview'}
+                open={Boolean(activeProjectPreview)}
+                onCancel={closeProjectPreview}
+                footer={null}
+                centered
+                width={980}
+                destroyOnClose
+              >
+                {activeProjectPreview?.previewEmbedUrl ? (
+                  <div className="pdf-modal">
+                    {activeProjectPreview.previewViewUrl ? (
+                      <div className="pdf-modal-actions">
+                        <Button
+                          href={activeProjectPreview.previewViewUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          icon={<ArrowUpRightIcon />}
+                          className="secondary-action"
+                        >
+                          Open file
+                        </Button>
+                      </div>
+                    ) : null}
+                    <div
+                      className="pdf-modal-embed"
+                      role="region"
+                      aria-label={`${activeProjectPreview.title} embedded preview`}
+                    >
+                      <iframe
+                        src={activeProjectPreview.previewEmbedUrl}
+                        title={`${activeProjectPreview.title} preview`}
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                        allow="autoplay"
+                      />
+                    </div>
+                  </div>
+                ) : activeProjectPreview?.previewImageUrl ? (
+                  <div className="image-modal" role="region" aria-label={`${activeProjectPreview.title} preview image`}>
+                    <img
+                      className="image-modal-img"
+                      src={activeProjectPreview.previewImageUrl}
+                      alt={`${activeProjectPreview.title} preview`}
+                      loading="eager"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                ) : null}
+              </Modal>
             </div>
           </motion.section>
 
@@ -811,8 +900,30 @@ const App: React.FC = () => {
               <Row gutter={[18, 18]}>
                 {projects.map(project => (
                   <Col xs={24} lg={8} key={project.title}>
-                    <motion.article variants={itemVariants} whileHover={{ y: -4 }} className="project-card">
-                      <ProjectPreview icon={project.icon} label={project.imageLabel} />
+                    <motion.article
+                      variants={itemVariants}
+                      whileHover={{ y: -4 }}
+                      className={`project-card ${project.previewImageUrl || project.previewEmbedUrl ? 'is-clickable' : ''}`}
+                      onClick={project.previewImageUrl || project.previewEmbedUrl ? () => openProjectPreview(project) : undefined}
+                      role={project.previewImageUrl || project.previewEmbedUrl ? 'button' : undefined}
+                      tabIndex={project.previewImageUrl || project.previewEmbedUrl ? 0 : undefined}
+                      onKeyDown={
+                        project.previewImageUrl || project.previewEmbedUrl
+                          ? event => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                              event.preventDefault();
+                              openProjectPreview(project);
+                            }
+                          }
+                          : undefined
+                      }
+                      aria-label={
+                        project.previewImageUrl || project.previewEmbedUrl
+                          ? `Open ${project.title} preview`
+                          : undefined
+                      }
+                    >
+                      <ProjectPreview icon={project.icon} label={project.imageLabel} imageUrl={project.previewImageUrl} />
                       <span className="project-category">{project.category}</span>
                       <h3>{project.title}</h3>
                       <p>{project.desc}</p>
@@ -892,14 +1003,17 @@ const App: React.FC = () => {
                         ))}
                       </ul>
                     </article>
-                    <article className="insight-card reference-card">
+
+                    <article className="insight-card">
                       <div className="card-heading compact">
-                        <div className="card-icon"><UserIcon /></div>
-                        <h3>Reference</h3>
+                        <div className="card-icon"><ZapIcon /></div>
+                        <h3>Interests</h3>
                       </div>
-                      <p>Mr. Mark Dennis Candel, DepEd Teacher</p>
-                      <p>markdennis.candel@deped.gov.ph</p>
-                      <p>09516178874</p>
+                      <ul>
+                        {interestItems.map(item => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
                     </article>
                   </motion.div>
                 </Col>
@@ -930,14 +1044,6 @@ const App: React.FC = () => {
                         <MailIcon />
                         <span>{CONTACT_EMAIL}</span>
                       </a>
-                      <a href="tel:+639649796538">
-                        <PhoneIcon />
-                        <span>09649796538</span>
-                      </a>
-                      <span>
-                        <MapPinIcon />
-                        <span>Purok 3, Canagong, Sikatuna, Bohol</span>
-                      </span>
                     </div>
 
                     <div className="social-row" aria-label="Social links">
@@ -1052,10 +1158,26 @@ const ChevronIndicator = ({ active }: ChevronIndicatorProps) => (
 type ProjectPreviewProps = {
   icon: ReactNode;
   label: string;
+  imageUrl?: string;
 };
 
-const ProjectPreview = ({ icon, label }: ProjectPreviewProps) => (
-  <motion.div whileHover="hover" initial="rest" animate="rest" className="project-preview">
+const ProjectPreview = ({ icon, label, imageUrl }: ProjectPreviewProps) => (
+  <motion.div
+    whileHover="hover"
+    initial="rest"
+    animate="rest"
+    className={`project-preview ${imageUrl ? 'has-image' : ''}`}
+  >
+    {imageUrl ? (
+      <img
+        className="project-preview-art"
+        src={imageUrl}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        referrerPolicy="no-referrer"
+      />
+    ) : null}
     <motion.div
       variants={{
         rest: { scale: 1, rotate: 0 },
@@ -1071,11 +1193,13 @@ const ProjectPreview = ({ icon, label }: ProjectPreviewProps) => (
       <span>{label}</span>
       <strong>Project Preview</strong>
     </div>
-    <div className="preview-lines" aria-hidden="true">
-      <span />
-      <span />
-      <span />
-    </div>
+    {imageUrl ? null : (
+      <div className="preview-lines" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+    )}
   </motion.div>
 );
 
